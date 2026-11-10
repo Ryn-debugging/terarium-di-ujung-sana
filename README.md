@@ -1,6 +1,11 @@
 # 🌿 Terarium di Ujung Lorong
 
+[![Play Online](https://img.shields.io/badge/▶_Mainkan_Online-GitHub_Pages-10b981?style=for-the-badge)](https://ryn-debugging.github.io/terarium-di-ujung-sana/)
+[![License: CC-BY-NC](https://img.shields.io/badge/License-CC_BY--NC-amber?style=for-the-badge)](#-lisensi)
+
 > *"Bantu tetanggamu dari balik kamar secara diam-diam tanpa harus bertatap muka."*
+
+🎮 **Mainkan Langsung di Browser:** [https://ryn-debugging.github.io/terarium-di-ujung-sana/](https://ryn-debugging.github.io/terarium-di-ujung-sana/)
 
 Sebuah **game drama psikologis indie (interactive narrative & 2D side-scrolling)** yang menceritakan tentang empati sunyi (*silent empathy*), isolasi diri, dan keberanian kecil untuk peduli di tengah dinginnya malam hujan.
 
