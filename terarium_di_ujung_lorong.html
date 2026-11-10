@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Terarium di Ujung Lorong — Indie Psychological Drama</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #090b0e;
+            color: #f1f5f9;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.6;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .font-literary {
+            font-family: var(--font-sans);
+        }
+
+        .font-mono-tech {
+            font-family: var(--font-mono);
+        }
+
+        /* Cinematic Letterbox Bars for Outside Room 304 */
+        .letterbox-bar {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            background-color: #040507;
+            z-index: 25;
+            transition: height 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+
+        .letterbox-top {
+            top: 0;
+            height: 0vh;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .letterbox-bottom {
+            bottom: 0;
+            height: 0vh;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        body.mode-outside .letterbox-top {
+            height: 8vh;
+        }
+
+        body.mode-outside .letterbox-bottom {
+            height: 8vh;
+        }
+
+        /* Sensory Overload Vignette */
+        #sensory-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            background: radial-gradient(circle at center, transparent 45%, rgba(120, 25, 35, 0.0) 100%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        @keyframes pulse-anxiety {
+            0%, 100% { transform: scale(1); opacity: 0.75; }
+            50% { transform: scale(1.03); opacity: 1; }
+        }
+
+        .anxiety-high {
+            animation: pulse-anxiety 1.1s infinite ease-in-out;
+        }
+
+        /* Grounding Calm Ripple */
+        #grounding-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 22;
+            background: radial-gradient(circle at center, rgba(52, 211, 153, 0.08) 0%, rgba(16, 185, 129, 0.18) 100%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+
+        /* Film Grain Overlay */
+        .film-grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 28;
+            opacity: 0.035;
+            background-image: radial-gradient(#ffffff 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 9999px;
+        }
+
+        /* Smooth Tooltip & Button Glows */
+        .amber-glow {
+            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35);
+        }
+        .moss-glow {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.4);
+        }
+        .danger-glow {
+            box-shadow: 0 0 25px -5px rgba(239, 68, 68, 0.5);
+        }
+    </style>
+</head>
+<body class="relative select-none">
+
+    <!-- Film Grain & Sensory Overlays -->
+    <div class="film-grain"></div>
+    <div id="sensory-vignette"></div>
+    <div id="grounding-overlay"></div>
+    <div class="letterbox-bar letterbox-top"></div>
+    <div class="letterbox-bar letterbox-bottom"></div>
+
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast-container" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-2">
+        <div id="toast-box" class="bg-slate-900/95 border border-emerald-500/60 text-emerald-100 px-5 py-2.5 rounded-2xl shadow-2xl text-sm sm:text-base font-medium flex items-center gap-2.5 backdrop-blur-md">
+            <span id="toast-icon">✨</span>
+            <span id="toast-text">+20 Mental, -15% Cemas. Lumut tampak segar.</span>
+        </div>
+    </div>
+
+    <!-- TITLE SCREEN OVERLAY -->
+    <div id="title-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#07090c] px-6 text-center transition-opacity duration-700">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-emerald-950/50 blur-[110px]"></div>
+            <div class="absolute bottom-1/4 left-1/3 w-[360px] h-[360px] rounded-full bg-amber-950/40 blur-[100px]"></div>
+        </div>
+
+        <div class="relative z-10 max-w-xl mx-auto flex flex-col items-center">
+            <!-- SVG Terrarium Emblem -->
+            <div class="w-20 h-24 mb-4 relative flex items-center justify-center">
+                <svg viewBox="0 0 100 120" class="w-full h-full drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                    <rect x="33" y="8" width="34" height="10" rx="3" fill="#b45309" />
+                    <rect x="29" y="18" width="42" height="6" rx="2" fill="none" stroke="#94a3b8" stroke-width="2" />
+                    <path d="M29 24 L18 42 L18 100 Q18 112 30 112 L70 112 Q82 112 82 100 L82 42 L71 24 Z" fill="rgba(16, 185, 129, 0.08)" stroke="#cbd5e1" stroke-width="2" />
+                    <path d="M20 92 Q50 86 80 92 L80 100 Q80 110 70 110 L30 110 Q20 110 20 100 Z" fill="#27272a" />
+                    <path d="M22 92 Q36 78 52 88 Q68 76 78 92 Z" fill="#059669" />
+                    <path d="M50 88 Q50 64 42 54" stroke="#34d399" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    <path d="M42 54 Q32 52 36 44 Q44 44 42 54" fill="#6ee7b7" />
+                    <path d="M48 70 Q58 62 60 54 Q50 56 48 70" fill="#34d399" />
+                    <circle cx="36" cy="68" r="2" fill="#fcd34d" />
+                    <circle cx="62" cy="46" r="1.8" fill="#a7f3d0" />
+                </svg>
+            </div>
+
+            <span class="font-mono-tech text-xs tracking-widest uppercase text-emerald-400 mb-2">Kamar 304 • Rusunawa Asoka</span>
+            <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-3">
+                Terarium di Ujung Lorong
+            </h1>
+            <p class="text-base sm:text-lg text-slate-300 max-w-md leading-relaxed mb-6">
+                Bantu tetanggamu dari balik kamar secara diam-diam tanpa harus bertatap muka.
+            </p>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 mb-7 text-left text-sm sm:text-base text-slate-200 space-y-3 w-full backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold shrink-0">1</span>
+                    <p><strong class="text-amber-300">Ketahanan Mental:</strong> Isi ulang dengan merawat lumut atau memasak sup.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center font-bold shrink-0">2</span>
+                    <p><strong class="text-rose-300">Cemas Sosial:</strong> Naik saat di lorong. Tekan <span class="text-emerald-300 font-mono-tech font-semibold">[SPASI]</span> untuk tarik napas.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-bold shrink-0">3</span>
+                    <p><strong class="text-emerald-300">Empati Sunyi:</strong> Dengar masalah tetangga, perbaiki barangnya, lalu letakkan di pintu.</p>
+                </div>
+            </div>
+
+            <button id="btn-start-game" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-emerald-600 hover:from-amber-400 hover:to-emerald-500 text-slate-950 font-bold text-base sm:text-lg transition-all duration-300 amber-glow flex items-center gap-3">
+                <span>Mulai Bermain</span>
+                <span>→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- TOP HUD: SIMPLIFIED BARS & STEP-BY-STEP QUEST BANNER -->
+    <header id="game-hud" class="fixed top-0 left-0 right-0 z-30 pointer-events-none px-3 sm:px-6 pt-3 sm:pt-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
+            
+            <!-- Left (4 cols): Simplified Status Bars -->
+            <div class="lg:col-span-4 pointer-events-auto bg-slate-950/90 border border-slate-800 backdrop-blur-md rounded-2xl p-3.5 shadow-2xl">
+                <div class="flex items-center justify-between mb-2.5">
+                    <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Status Raka
+                    </span>
+                    <span id="selfcare-badge" class="font-mono-tech text-xs px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/60">
+                        Fisik Sehat
+                    </span>
+                </div>
+
+                <!-- Bar 1: Ketahanan Mental -->
+                <div class="mb-2.5">
+                    <div class="flex justify-between text-xs sm:text-sm font-medium mb-1">
+                        <span class="text-amber-300">Ketahanan Mental (Resilience)</span>
+                        <span id="resilience-text" class="font-mono-tech text-amber-200">85 / 100</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden relative border border-slate-800">
+                        <div id="resilience-cap-lock" class="absolute right-0 top-0 bottom-0 bg-rose-950/90 border-l border-rose-600 transition-all duration-300" style="width: 0%;"></div>
+                        <div id="resilience-bar" class="h-full bg-gradient-to-r from-amber-500 to-emerald-400 rounded-full transition-all duration-300" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <!-- Bar 2: Cemas Sosial -->
+                <div class="mb-3">
+                    <div class="flex justify-between text-xs sm:text-sm font-medium mb-1">
+                        <span class="text-sky-300">Cemas Sosial (Sensory Load)</span>
+                        <span id="sensory-text" class="font-mono-tech text-sky-200">10%</span>
+                    </div>
+                    <div class="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                        <div id="sensory-bar" class="h-full bg-gradient-to-r from-cyan-400 via-amber-500 to-rose-600 rounded-full transition-all duration-200" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <!-- 1-Click Grounding Button -->
+                <button id="btn-grounding" class="w-full py-2 px-3 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-600/60 text-emerald-100 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 active:scale-95">
+                    <span>🌬️ [SPASI] Tarik Napas</span>
+                    <span class="font-mono-tech text-xs text-amber-300">(-35% Cemas | -20 Mental)</span>
+                </button>
+            </div>
+
+            <!-- Center (5 cols): Prominent "Misi Saat Ini" Banner -->
+            <div class="lg:col-span-5 pointer-events-auto flex flex-col items-center">
+                <div class="w-full bg-slate-950/95 border-2 border-amber-500/60 backdrop-blur-md rounded-2xl px-4 py-3 shadow-2xl amber-glow">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-mono-tech text-xs uppercase tracking-wider text-amber-400 font-semibold">🎯 Misi Saat Ini</span>
+                        <span id="quest-step-badge" class="font-mono-tech text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-200">Langkah 1 / 5</span>
+                    </div>
+                    <p id="quest-banner-text" class="text-sm sm:text-base font-bold text-white leading-snug">
+                        1. Cek Ventilasi untuk dengar kabar tetangga.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right (3 cols): Location, Log & Audio -->
+            <div class="lg:col-span-3 pointer-events-auto flex flex-col items-end gap-2">
+                <div class="flex items-center justify-end gap-2 w-full">
+                    <div class="bg-slate-950/90 border border-slate-800 backdrop-blur-md px-3.5 py-2 rounded-2xl flex items-center gap-2 shadow-xl flex-1 sm:flex-initial">
+                        <span id="area-icon" class="text-amber-400 text-base">🏠</span>
+                        <div>
+                            <div id="area-title" class="text-xs sm:text-sm font-bold text-white leading-tight">Kamar 304</div>
+                            <div id="area-subtitle" class="text-xs text-slate-400">Zona Aman</div>
+                        </div>
+                    </div>
+
+                    <button id="btn-open-journal" class="bg-slate-950/90 hover:bg-slate-900 border border-slate-700 px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-amber-200 flex items-center gap-1.5 shadow-xl transition-all" title="Tas & Catatan">
+                        <span>🎒</span>
+                        <span>Tas</span>
+                        <span id="inventory-count-badge" class="px-1.5 py-0.2 rounded-full bg-amber-500/20 font-mono-tech text-xs text-amber-300">0/3</span>
+                    </button>
+
+                    <button id="btn-toggle-audio" class="bg-slate-950/90 hover:bg-slate-900 border border-slate-700 p-2.5 rounded-2xl text-sm text-slate-200 shadow-xl transition-all" title="Suara Hujan & Piano">
+                        <span id="audio-icon">🔊</span>
+                    </button>
+                </div>
+
+                <!-- Compact Neighbor Progress Pills -->
+                <div class="bg-slate-950/90 border border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-2.5 text-xs shadow-lg w-full justify-between">
+                    <span id="tracker-301" class="text-slate-400 font-medium">301: Belum</span>
+                    <span class="text-slate-700">•</span>
+                    <span id="tracker-302" class="text-slate-400 font-medium">302: Belum</span>
+                    <span class="text-slate-700">•</span>
+                    <span id="tracker-305" class="text-slate-400 font-medium">305: Belum</span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE 2D CANVAS -->
+    <main class="relative w-full h-full flex items-center justify-center overflow-hidden">
+        <canvas id="game-canvas" class="block w-full h-full cursor-pointer"></canvas>
+
+        <!-- Contextual Hotspot Prompt Floating Pill -->
+        <div id="hotspot-prompt" class="fixed bottom-32 sm:bottom-28 left-1/2 -translate-x-1/2 z-30 pointer-events-auto hidden">
+            <button id="btn-interact-hotspot" class="px-5 py-3 rounded-2xl bg-slate-950 hover:bg-slate-900 border-2 border-amber-400 text-white text-sm sm:text-base font-bold shadow-2xl flex items-center gap-2.5 transition-all amber-glow active:scale-95">
+                <span class="px-2 py-0.5 rounded-lg bg-amber-500 text-slate-950 font-mono-tech text-xs font-bold">[E / Klik]</span>
+                <span id="hotspot-prompt-label">Cek Terarium Lumut</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- BOTTOM DIALOGUE BAR & SIMPLE CONTROLS -->
+    <footer class="fixed bottom-0 left-0 right-0 z-30 pointer-events-none px-3 sm:px-6 pb-3 sm:pb-5">
+        <div class="max-w-4xl mx-auto">
+            <div class="pointer-events-auto bg-slate-950/95 border border-slate-800 backdrop-blur-md rounded-2xl px-4 py-3 sm:px-6 sm:py-4 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="text-center sm:text-left">
+                    <p id="monologue-text" class="text-base sm:text-lg font-medium text-white leading-snug">
+                        Kamarku tenang dan aman. Aku bisa mendengar suara tetangga dari celah ventilasi.
+                    </p>
+                    <p id="monologue-sub" class="text-xs sm:text-sm text-amber-300/90 mt-0.5">
+                        Jalan dengan tombol [A / D], [Panah], atau klik langsung objek di layar.
+                    </p>
+                </div>
+
+                <!-- Touch / Quick Movement Controls -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button id="btn-move-left" class="w-11 h-11 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white text-lg font-bold flex items-center justify-center active:bg-amber-600 transition-colors" title="Jalan ke Kiri">
+                        ←
+                    </button>
+                    <button id="btn-action-main" class="px-4 h-11 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm flex items-center justify-center active:scale-95 transition-all" title="Interaksi Objek">
+                        INTERAKSI
+                    </button>
+                    <button id="btn-move-right" class="w-11 h-11 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white text-lg font-bold flex items-center justify-center active:bg-amber-600 transition-colors" title="Jalan ke Kanan">
+                        →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CLEAN MODAL SYSTEM -->
+    <div id="modal-backdrop" class="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div id="modal-card" class="bg-[#0f141c] border border-slate-700 rounded-3xl max-w-xl w-full max-h-[88vh] overflow-y-auto shadow-2xl p-5 sm:p-7 relative text-slate-100">
+            <button id="btn-close-modal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold transition-colors">
+                ✕
+            </button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        /**************************************************************************
+         * 1. PROCEDURAL WEB AUDIO ENGINE (Rain, Felt Piano, Heartbeat, SFX)
+         **************************************************************************/
+        class SoundscapeEngine {
+            constructor() {
+                this.ctx = null;
+                this.isMuted = false;
+                this.isStarted = false;
+                this.rainGain = null;
+                this.rainFilter = null;
+                this.pianoTimer = null;
+                this.heartbeatTimer = null;
+            }
+
+            init() {
+                if (this.isStarted) return;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                this.ctx = new AudioCtx();
+                this.isStarted = true;
+
+                const bufferSize = this.ctx.sampleRate * 3;
+                const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                let lastOut = 0.0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    output[i] = (lastOut + (0.02 * white)) / 1.02;
+                    lastOut = output[i];
+                    output[i] *= 3.2;
+                }
+
+                const whiteNoise = this.ctx.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.loop = true;
+
+                this.rainFilter = this.ctx.createBiquadFilter();
+                this.rainFilter.type = 'lowpass';
+                this.rainFilter.frequency.value = 650;
+
+                this.rainGain = this.ctx.createGain();
+                this.rainGain.gain.value = 0.14;
+
+                whiteNoise.connect(this.rainFilter);
+                this.rainFilter.connect(this.rainGain);
+                this.rainGain.connect(this.ctx.destination);
+                whiteNoise.start(0);
+
+                this.pianoTimer = setInterval(() => this.playAmbientNote(), 4200);
+                this.heartbeatTimer = setInterval(() => this.checkHeartbeat(), 950);
+            }
+
+            updateEnvironment(area) {
+                if (!this.isStarted || this.isMuted || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                if (area === 'room304') {
+                    this.rainFilter.frequency.setTargetAtTime(620, now, 0.5);
+                    this.rainGain.gain.setTargetAtTime(0.12, now, 0.5);
+                } else if (area === 'hallway') {
+                    this.rainFilter.frequency.setTargetAtTime(1350, now, 0.5);
+                    this.rainGain.gain.setTargetAtTime(0.20, now, 0.5);
+                } else if (area === 'rooftop') {
+                    this.rainFilter.frequency.setTargetAtTime(2400, now, 0.5);
+                    this.rainGain.gain.setTargetAtTime(0.32, now, 0.5);
+                }
+            }
+
+            playAmbientNote() {
+                if (!this.isStarted || this.isMuted || !this.ctx) return;
+                if (gameState.sensoryLoad > 75) return;
+
+                const notes = [146.83, 174.61, 220.00, 261.63, 293.66, 329.63, 349.23, 440.00];
+                const freq = notes[Math.floor(Math.random() * notes.length)];
+
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const filter = this.ctx.createBiquadFilter();
+
+                osc.type = Math.random() > 0.4 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(480, this.ctx.currentTime);
+
+                const now = this.ctx.currentTime;
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.05, now + 0.4);
+                gain.gain.exponentialRampToValueAtTime(0.0008, now + 3.6);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 3.7);
+            }
+
+            checkHeartbeat() {
+                if (!this.isStarted || this.isMuted || !this.ctx) return;
+                if (gameState.sensoryLoad < 45) return;
+
+                const intensity = Math.min(1, (gameState.sensoryLoad - 40) / 60);
+                const now = this.ctx.currentTime;
+
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(58, now);
+                osc.frequency.exponentialRampToValueAtTime(32, now + 0.18);
+
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(0.18 * intensity, now + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.24);
+            }
+
+            playSFX(type) {
+                if (!this.isStarted || this.isMuted || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                if (type === 'water') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                } else if (type === 'breath') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(293.66, now);
+                    osc.frequency.linearRampToValueAtTime(220.0, now + 0.9);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.07, now + 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+                } else if (type === 'solder') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(660, now + 0.18);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                } else if (type === 'door') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.exponentialRampToValueAtTime(85, now + 0.22);
+                    gain.gain.setValueAtTime(0.09, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                } else if (type === 'chime') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now);
+                    osc.frequency.setValueAtTime(880, now + 0.12);
+                    gain.gain.setValueAtTime(0.07, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                }
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 1.0);
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                if (this.rainGain && this.ctx) {
+                    this.rainGain.gain.setTargetAtTime(this.isMuted ? 0 : (gameState.area === 'room304' ? 0.12 : 0.22), this.ctx.currentTime, 0.2);
+                }
+                return this.isMuted;
+            }
+        }
+
+        const audio = new SoundscapeEngine();
+
+        /**************************************************************************
+         * 2. CORE GAME STATE
+         **************************************************************************/
+        const gameState = {
+            area: 'room304',
+            resilience: 85,
+            maxResilience: 100,
+            sensoryLoad: 10,
+            selfCareTimer: 0,
+            groundingAuraTimer: 0,
+
+            playerX: 480,
+            targetX: null,
+            facing: 1,
+            moveLeft: false,
+            moveRight: false,
+
+            clues: {
+                ratna: false,
+                damar: false,
+                sora: false
+            },
+
+            inventory: {
+                gantunganKunciRusak: false,
+                radioRongsokan: false,
+                sketsaRobek: false
+            },
+
+            crafted: {
+                itemRatna: false, // Radio Keroncong Tua (301)
+                itemDamar: false, // Senter Kurir Modifikasi (302)
+                itemSora: false   // Terarium Lentera Kecil (305)
+            },
+
+            delivered: {
+                ratna: false,
+                damar: false,
+                sora: false
+            },
+
+            particles: [],
+            rainDrops: [],
+            hallwayNPC: {
+                x: 240,
+                dir: 1,
+                speed: 0.55,
+                pauseTimer: 0
+            },
+
+            activeHotspot: null,
+            modalOpen: false,
+            endingReached: false
+        };
+
+        for (let i = 0; i < 95; i++) {
+            gameState.rainDrops.push({
+                x: Math.random() * 1200,
+                y: Math.random() * 700,
+                len: 12 + Math.random() * 18,
+                speed: 9 + Math.random() * 7
+            });
+        }
+        for (let i = 0; i < 32; i++) {
+            gameState.particles.push({
+                x: Math.random() * 1000,
+                y: Math.random() * 600,
+                r: 1.2 + Math.random() * 2.2,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: -0.15 - Math.random() * 0.35,
+                alpha: 0.2 + Math.random() * 0.6,
+                color: Math.random() > 0.4 ? '#34d399' : '#fbbf24'
+            });
+        }
+
+        /**************************************************************************
+         * 3. HOTSPOTS DEFINITION
+         **************************************************************************/
+        const HOTSPOTS = {
+            room304: [
+                {
+                    id: 'kitchen',
+                    x: 150,
+                    label: 'Masak Sup Hangat (+25 Mental)',
+                    shortTitle: 'Kompor Kecil'
+                },
+                {
+                    id: 'terrarium',
+                    x: 365,
+                    label: 'Rawat Terarium Lumut (+20 Mental)',
+                    shortTitle: 'Terarium Lumut'
+                },
+                {
+                    id: 'workbench',
+                    x: 565,
+                    label: 'Perbaiki Barang di Meja Kerja',
+                    shortTitle: 'Meja Kerja'
+                },
+                {
+                    id: 'vent_window',
+                    x: 745,
+                    label: 'Cek Ventilasi & Jendela (Observasi)',
+                    shortTitle: 'Ventilasi'
+                },
+                {
+                    id: 'door_out',
+                    x: 900,
+                    label: 'Keluar ke Lorong Lantai 3',
+                    shortTitle: 'Pintu Keluar'
+                }
+            ],
+            hallway: [
+                {
+                    id: 'door_301',
+                    x: 120,
+                    label: 'Pintu 301 — Bu Ratna',
+                    shortTitle: 'Kamar 301'
+                },
+                {
+                    id: 'door_302',
+                    x: 300,
+                    label: 'Pintu 302 — Damar',
+                    shortTitle: 'Kamar 302'
+                },
+                {
+                    id: 'trash_bin',
+                    x: 455,
+                    label: 'Ambil Barang Rusak di Tempat Sampah',
+                    shortTitle: 'Tempat Sampah'
+                },
+                {
+                    id: 'door_304_in',
+                    x: 600,
+                    label: 'Masuk Kembali ke Kamar 304',
+                    shortTitle: 'Kamar 304 (Raka)'
+                },
+                {
+                    id: 'door_305',
+                    x: 765,
+                    label: 'Pintu 305 — Sora',
+                    shortTitle: 'Kamar 305'
+                },
+                {
+                    id: 'stairs_roof',
+                    x: 915,
+                    label: 'Naik Tangga ke Atap Gedung',
+                    shortTitle: 'Tangga Atap'
+                }
+            ],
+            rooftop: [
+                {
+                    id: 'roof_door_back',
+                    x: 130,
+                    label: 'Turun Kembali ke Lorong',
+                    shortTitle: 'Pintu Turun'
+                },
+                {
+                    id: 'sora_climax',
+                    x: 740,
+                    label: 'Temui Sora di Tepi Atap',
+                    shortTitle: 'Sora'
+                }
+            ]
+        };
+
+        /**************************************************************************
+         * 4. UI HELPERS: TOAST, MONOLOGUE, QUEST BANNER, HUD
+         **************************************************************************/
+        let toastTimeout = null;
+        function showToast(text, icon = '✨') {
+            const container = document.getElementById('toast-container');
+            document.getElementById('toast-text').textContent = text;
+            document.getElementById('toast-icon').textContent = icon;
+            container.classList.remove('opacity-0', '-translate-y-2');
+            container.classList.add('opacity-100', 'translate-y-0');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                container.classList.add('opacity-0', '-translate-y-2');
+                container.classList.remove('opacity-100', 'translate-y-0');
+            }, 3200);
+        }
+
+        function setMonologue(text, subText = null) {
+            document.getElementById('monologue-text').textContent = text;
+            if (subText) document.getElementById('monologue-sub').textContent = subText;
+        }
+
+        function updateQuestBanner() {
+            const allObserved = gameState.clues.ratna && gameState.clues.damar && gameState.clues.sora;
+            const allScavenged = gameState.inventory.gantunganKunciRusak && gameState.inventory.radioRongsokan && gameState.inventory.sketsaRobek;
+            const allCrafted = gameState.crafted.itemRatna && gameState.crafted.itemDamar && gameState.crafted.itemSora;
+            const allDelivered = gameState.delivered.ratna && gameState.delivered.damar && gameState.delivered.sora;
+
+            const stepBadge = document.getElementById('quest-step-badge');
+            const bannerText = document.getElementById('quest-banner-text');
+
+            if (!allObserved) {
+                stepBadge.textContent = 'Langkah 1 / 5';
+                bannerText.textContent = '1. Cek Ventilasi untuk dengar kabar tetangga.';
+            } else if (!allScavenged) {
+                stepBadge.textContent = 'Langkah 2 / 5';
+                bannerText.textContent = '2. Ambil barang rusak di Tempat Sampah Lorong.';
+            } else if (!allCrafted) {
+                stepBadge.textContent = 'Langkah 3 / 5';
+                bannerText.textContent = '3. Perbaiki barang di Meja Kerja Kamar 304.';
+            } else if (!allDelivered) {
+                stepBadge.textContent = 'Langkah 4 / 5';
+                bannerText.textContent = '4. Letakkan diam-diam di pintu 301, 302, & 305.';
+            } else {
+                stepBadge.textContent = 'Langkah 5 / 5';
+                bannerText.textContent = '5. Naik ke Atap Gedung untuk menemui Sora.';
+            }
+        }
+
+        function updateHUD() {
+            gameState.maxResilience = Math.max(40, Math.min(100, gameState.maxResilience));
+            gameState.resilience = Math.max(0, Math.min(gameState.maxResilience, gameState.resilience));
+            gameState.sensoryLoad = Math.max(0, Math.min(100, gameState.sensoryLoad));
+
+            document.getElementById('resilience-text').textContent = `${Math.round(gameState.resilience)} / ${Math.round(gameState.maxResilience)}`;
+            document.getElementById('resilience-bar').style.width = `${gameState.resilience}%`;
+            document.getElementById('resilience-cap-lock').style.width = `${100 - gameState.maxResilience}%`;
+
+            document.getElementById('sensory-text').textContent = `${Math.round(gameState.sensoryLoad)}%`;
+            document.getElementById('sensory-bar').style.width = `${gameState.sensoryLoad}%`;
+
+            const badge = document.getElementById('selfcare-badge');
+            if (gameState.maxResilience >= 90) {
+                badge.textContent = 'Fisik Sehat';
+                badge.className = 'font-mono-tech text-xs px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/60';
+            } else if (gameState.maxResilience >= 70) {
+                badge.textContent = 'Mulai Lelah';
+                badge.className = 'font-mono-tech text-xs px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-700/60';
+            } else {
+                badge.textContent = 'Butuh Sup Hangat!';
+                badge.className = 'font-mono-tech text-xs px-2.5 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-700/60 animate-pulse';
+            }
+
+            const vignette = document.getElementById('sensory-vignette');
+            if (gameState.sensoryLoad > 35) {
+                const alpha = ((gameState.sensoryLoad - 35) / 65) * 0.78;
+                vignette.style.background = `radial-gradient(circle at center, transparent ${55 - alpha * 30}%, rgba(155, 22, 38, ${alpha}) 100%)`;
+                vignette.style.opacity = '1';
+                vignette.classList.toggle('anxiety-high', gameState.sensoryLoad > 70);
+            } else {
+                vignette.style.opacity = '0';
+                vignette.classList.remove('anxiety-high');
+            }
+
+            const setTrack = (id, clue, crafted, delivered, num) => {
+                const el = document.getElementById(id);
+                if (delivered) {
+                    el.innerHTML = `<span class="text-emerald-400 font-bold">${num}: Selesai ✓</span>`;
+                } else if (crafted) {
+                    el.innerHTML = `<span class="text-amber-300 font-semibold">${num}: Siap Antar</span>`;
+                } else if (clue) {
+                    el.innerHTML = `<span class="text-sky-300">${num}: Teramati</span>`;
+                } else {
+                    el.innerHTML = `<span class="text-slate-400">${num}: Belum</span>`;
+                }
+            };
+            setTrack('tracker-301', gameState.clues.ratna, gameState.crafted.itemRatna, gameState.delivered.ratna, '301');
+            setTrack('tracker-302', gameState.clues.damar, gameState.crafted.itemDamar, gameState.delivered.damar, '302');
+            setTrack('tracker-305', gameState.clues.sora, gameState.crafted.itemSora, gameState.delivered.sora, '305');
+
+            const craftedCount = [gameState.crafted.itemRatna, gameState.crafted.itemDamar, gameState.crafted.itemSora].filter(Boolean).length;
+            document.getElementById('inventory-count-badge').textContent = `${craftedCount}/3`;
+
+            updateQuestBanner();
+        }
+
+        function switchArea(newArea, spawnX) {
+            audio.playSFX('door');
+            gameState.area = newArea;
+            gameState.playerX = spawnX;
+            gameState.targetX = null;
+
+            const body = document.body;
+            const areaIcon = document.getElementById('area-icon');
+            const areaTitle = document.getElementById('area-title');
+            const areaSub = document.getElementById('area-subtitle');
+
+            if (newArea === 'room304') {
+                body.classList.remove('mode-outside');
+                areaIcon.textContent = '🏠';
+                areaTitle.textContent = 'Kamar 304';
+                areaSub.textContent = 'Zona Aman (Cemas Turun)';
+                setMonologue(
+                    'Pintu terkunci rapat. Di dalam kamar ini, napasku kembali tenang.',
+                    'Di Kamar 304, Cemas Sosial turun secara otomatis.'
+                );
+            } else if (newArea === 'hallway') {
+                body.classList.add('mode-outside');
+                areaIcon.textContent = '🚪';
+                areaTitle.textContent = 'Lorong Lantai 3';
+                areaSub.textContent = 'Awas Bayangan Tetangga';
+                setMonologue(
+                    'Lorong terasa dingin dan sempit. Aku harus bergerak cepat sebelum ada yang menyapaku.',
+                    'Hindari bayangan tetangga atau tekan [SPASI] untuk Tarik Napas.'
+                );
+            } else if (newArea === 'rooftop') {
+                body.classList.add('mode-outside');
+                areaIcon.textContent = '🌧️';
+                areaTitle.textContent = 'Atap Gedung';
+                areaSub.textContent = 'Hujan Malam';
+                setMonologue(
+                    'Sora berdiri sendirian di tepi pagar atap. Aku harus mendekatinya sekarang.',
+                    'Berjalan ke kanan dan klik Sora untuk menentukan akhir cerita.'
+                );
+            }
+
+            audio.updateEnvironment(newArea);
+            updateHUD();
+        }
+
+        function triggerGrounding() {
+            if (gameState.modalOpen) return;
+            if (gameState.resilience < 20) {
+                showToast('Mental kurang dari 20! Rawat lumut atau masak sup dulu.', '⚠️');
+                return;
+            }
+            audio.playSFX('breath');
+            gameState.resilience -= 20;
+            gameState.sensoryLoad = Math.max(0, gameState.sensoryLoad - 35);
+            gameState.groundingAuraTimer = 180;
+
+            const overlay = document.getElementById('grounding-overlay');
+            overlay.style.opacity = '1';
+            setTimeout(() => { overlay.style.opacity = '0'; }, 900);
+
+            showToast('Tarik Napas: -35% Cemas | Kebal cemas 3 detik.', '🌬️');
+            setMonologue(
+                'Tarik napas pelan... embuskan. Aku masih memegang kendali.',
+                'Fokus aktif: Beban cemas berkurang drastis.'
+            );
+            updateHUD();
+        }
+
+        /**************************************************************************
+         * 5. BITE-SIZED CLEAN MODALS & INTERACTIONS
+         **************************************************************************/
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(htmlContent) {
+            gameState.modalOpen = true;
+            gameState.moveLeft = false;
+            gameState.moveRight = false;
+            gameState.targetX = null;
+            modalContent.innerHTML = htmlContent;
+            modalBackdrop.classList.remove('hidden');
+            modalBackdrop.classList.add('flex');
+        }
+
+        function closeModal() {
+            gameState.modalOpen = false;
+            modalBackdrop.classList.add('hidden');
+            modalBackdrop.classList.remove('flex');
+            updateHUD();
+        }
+
+        document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) closeModal();
+        });
+
+        function interactCurrentHotspot() {
+            const h = gameState.activeHotspot;
+            if (!h || gameState.modalOpen) return;
+
+            if (h.id === 'kitchen') {
+                audio.playSFX('water');
+                gameState.maxResilience = 100;
+                gameState.resilience = Math.min(100, gameState.resilience + 25);
+                gameState.sensoryLoad = Math.max(0, gameState.sensoryLoad - 15);
+                gameState.selfCareTimer = 0;
+
+                showToast('+25 Mental, Batas Mental Pulih. Sup hangat menenangkan.', '🍲');
+                setMonologue(
+                    'Sup hangat membuat tubuhku kembali bertenaga.',
+                    '+25 Mental & batas maksimal mental pulih ke 100.'
+                );
+                updateHUD();
+            }
+
+            else if (h.id === 'terrarium') {
+                audio.playSFX('chime');
+                gameState.resilience = Math.min(gameState.maxResilience, gameState.resilience + 20);
+                gameState.sensoryLoad = Math.max(0, gameState.sensoryLoad - 15);
+
+                showToast('+20 Mental, -15% Cemas. Lumut tampak segar.', '🌿');
+                setMonologue(
+                    'Menyemprot lumut hijau di dalam kaca selalu menenangkan pikiranku.',
+                    '+20 Mental & -15% Cemas Sosial.'
+                );
+                updateHUD();
+            }
+
+            else if (h.id === 'vent_window') {
+                openObservationModal();
+            }
+
+            else if (h.id === 'workbench') {
+                openWorkbenchModal();
+            }
+
+            else if (h.id === 'door_out') {
+                switchArea('hallway', 595);
+            }
+
+            else if (h.id === 'door_304_in') {
+                switchArea('room304', 875);
+            }
+
+            else if (h.id === 'trash_bin') {
+                openTrashScavengeModal();
+            }
+
+            else if (h.id === 'door_301') {
+                handleNeighborDoorInteraction('ratna', '301', 'Bu Ratna', 'itemRatna', 'Radio Keroncong Tua (301)');
+            }
+
+            else if (h.id === 'door_302') {
+                handleNeighborDoorInteraction('damar', '302', 'Damar', 'itemDamar', 'Senter Kurir Modifikasi (302)');
+            }
+
+            else if (h.id === 'door_305') {
+                handleNeighborDoorInteraction('sora', '305', 'Sora', 'itemSora', 'Terarium Lentera Kecil (305)');
+            }
+
+            else if (h.id === 'stairs_roof') {
+                if (!gameState.delivered.ratna || !gameState.delivered.damar || !gameState.delivered.sora) {
+                    openModal(`
+                        <div class="space-y-4">
+                            <span class="font-mono-tech text-xs uppercase text-amber-400">Tangga Atap Terkunci</span>
+                            <h2 class="text-2xl font-bold text-white">Bantu Semua Tetangga Dulu</h2>
+                            <p class="text-base text-slate-300">
+                                Selesaikan pengantaran barang ke pintu 301, 302, dan 305 sebelum naik ke atap.
+                            </p>
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2 text-sm sm:text-base">
+                                <div class="${gameState.delivered.ratna ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+                                    ${gameState.delivered.ratna ? '✓' : '○'} Kamar 301: Radio Keroncong Tua
+                                </div>
+                                <div class=" ${gameState.delivered.damar ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+                                    ${gameState.delivered.damar ? '✓' : '○'} Kamar 302: Senter Kurir Modifikasi
+                                </div>
+                                <div class="${gameState.delivered.sora ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">
+                                    ${gameState.delivered.sora ? '✓' : '○'} Kamar 305: Terarium Lentera Kecil
+                                </div>
+                            </div>
+                            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">Mengerti</button>
+                        </div>
+                    `);
+                } else {
+                    switchArea('rooftop', 160);
+                }
+            }
+
+            else if (h.id === 'roof_door_back') {
+                switchArea('hallway', 895);
+            }
+
+            else if (h.id === 'sora_climax') {
+                openClimaxRooftopModal();
+            }
+        }
+
+        // --- 1. OBSERVATION MODAL (Super Simple 3 Cards) ---
+        function openObservationModal() {
+            const allDone = gameState.clues.ratna && gameState.clues.damar && gameState.clues.sora;
+            const html = `
+                <div class="space-y-5">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-sky-400">Langkah 1 • Observasi Ventilasi</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Kabar Tetangga Malam Ini</h2>
+                        <p class="text-sm sm:text-base text-slate-300 mt-1">
+                            Dengarkan suara dari balik ventilasi untuk tahu apa yang mereka butuhkan.
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- 301 Bu Ratna -->
+                        <div class="bg-slate-900 border ${gameState.clues.ratna ? 'border-emerald-600/60' : 'border-slate-800'} rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div>
+                                <div class="text-xs font-mono-tech text-amber-300 mb-1">Kamar 301 • Bu Ratna</div>
+                                <p class="text-sm sm:text-base text-white font-medium">
+                                    "Sering lupa kunci dan menangis mendengar lagu lama suaminya."
+                                </p>
+                            </div>
+                            <button onclick="observeNeighbor('ratna')" class="shrink-0 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm ${gameState.clues.ratna ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' : 'bg-sky-500 hover:bg-sky-400 text-slate-950'}">
+                                ${gameState.clues.ratna ? '✓ Teramati' : 'Dengar (-5 Mental)'}
+                            </button>
+                        </div>
+
+                        <!-- 302 Damar -->
+                        <div class="bg-slate-900 border ${gameState.clues.damar ? 'border-emerald-600/60' : 'border-slate-800'} rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div>
+                                <div class="text-xs font-mono-tech text-amber-300 mb-1">Kamar 302 • Damar</div>
+                                <p class="text-sm sm:text-base text-white font-medium">
+                                    "Kurir malam yang putus asa karena senter dan pengait tasnya patah."
+                                </p>
+                            </div>
+                            <button onclick="observeNeighbor('damar')" class="shrink-0 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm ${gameState.clues.damar ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' : 'bg-sky-500 hover:bg-sky-400 text-slate-950'}">
+                                ${gameState.clues.damar ? '✓ Teramati' : 'Dengar (-5 Mental)'}
+                            </button>
+                        </div>
+
+                        <!-- 305 Sora -->
+                        <div class="bg-slate-900 border ${gameState.clues.sora ? 'border-emerald-600/60' : 'border-slate-800'} rounded-2xl p-4 flex items-center justify-between gap-4">
+                            <div>
+                                <div class="text-xs font-mono-tech text-amber-300 mb-1">Kamar 305 • Sora</div>
+                                <p class="text-sm sm:text-base text-white font-medium">
+                                    "Pelukis yang mulai tuli. Ia membuang sketsa terakhirnya dan ingin menyerah."
+                                </p>
+                            </div>
+                            <button onclick="observeNeighbor('sora')" class="shrink-0 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm ${gameState.clues.sora ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' : 'bg-sky-500 hover:bg-sky-400 text-slate-950'}">
+                                ${gameState.clues.sora ? '✓ Teramati' : 'Dengar (-5 Mental)'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        ${!allDone ? `
+                            <button onclick="observeAllNeighbors()" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm">
+                                Dengarkan Semua Sekaligus
+                            </button>
+                        ` : `
+                            <span class="text-sm text-emerald-400 font-semibold">✓ Semua kabar sudah dicatat! Lanjut ke Tempat Sampah Lorong.</span>
+                        `}
+                        <button onclick="closeModal()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">Tutup</button>
+                    </div>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        window.observeNeighbor = function(who) {
+            audio.playSFX('chime');
+            gameState.resilience = Math.max(5, gameState.resilience - 5);
+            gameState.clues[who] = true;
+            updateHUD();
+            openObservationModal();
+        };
+
+        window.observeAllNeighbors = function() {
+            audio.playSFX('chime');
+            gameState.resilience = Math.max(5, gameState.resilience - 10);
+            gameState.clues.ratna = true;
+            gameState.clues.damar = true;
+            gameState.clues.sora = true;
+            showToast('Semua kabar tetangga berhasil diamati!', '👂');
+            closeModal();
+        };
+
+        // --- 2. HALLWAY TRASH BIN SCAVENGING ---
+        function openTrashScavengeModal() {
+            const allFound = gameState.inventory.gantunganKunciRusak && gameState.inventory.radioRongsokan && gameState.inventory.sketsaRobek;
+            const html = `
+                <div class="space-y-5">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-amber-400">Langkah 2 • Tempat Sampah Lorong</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Barang Rusak Milik Tetangga</h2>
+                        <p class="text-sm sm:text-base text-slate-300 mt-1">
+                            Ambil barang-barang ini untuk diperbaiki di Meja Kerja Kamar 304.
+                        </p>
+                    </div>
+
+                    <div class="space-y-2.5 text-sm sm:text-base">
+                        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                            <span class="font-medium text-white">📻 Radio Keroncong Rusak (Milik Bu Ratna)</span>
+                            <span class="font-mono-tech text-xs ${gameState.inventory.gantunganKunciRusak ? 'text-emerald-400' : 'text-amber-300'}">${gameState.inventory.gantunganKunciRusak ? '✓ Diambil' : 'Tersedia'}</span>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                            <span class="font-medium text-white">🔦 Senter & Pengait Patah (Milik Damar)</span>
+                            <span class="font-mono-tech text-xs ${gameState.inventory.radioRongsokan ? 'text-emerald-400' : 'text-amber-300'}">${gameState.inventory.radioRongsokan ? '✓ Diambil' : 'Tersedia'}</span>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                            <span class="font-medium text-white">🎨 Sketsa Robek Terakhir (Milik Sora)</span>
+                            <span class="font-mono-tech text-xs ${gameState.inventory.sketsaRobek ? 'text-emerald-400' : 'text-amber-300'}">${gameState.inventory.sketsaRobek ? '✓ Diambil' : 'Tersedia'}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-2">
+                        ${!allFound ? `
+                            <button onclick="collectAllTrashItems()" class="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-base transition-all amber-glow">
+                                🖐️ Ambil Semua Barang (1-Klik)
+                            </button>
+                        ` : `
+                            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">Sudah Diambil Semua — Tutup</button>
+                        `}
+                    </div>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        window.collectAllTrashItems = function() {
+            audio.playSFX('solder');
+            gameState.inventory.gantunganKunciRusak = true;
+            gameState.inventory.radioRongsokan = true;
+            gameState.inventory.sketsaRobek = true;
+            gameState.sensoryLoad = Math.min(100, gameState.sensoryLoad + 10);
+            showToast('3 Barang rusak diambil! Kembali ke Meja Kerja Kamar 304.', '🎒');
+            setMonologue(
+                'Semua barang sudah di saku. Saatnya kembali ke Kamar 304 untuk menyoldernya.',
+                'Masuk kembali ke Pintu 304 dan buka Meja Kerja.'
+            );
+            closeModal();
+        };
+
+        // --- 3. WORKBENCH CRAFTING & SIMPLE 1-CLICK SOLDERING MINI-GAME ---
+        let solderingInterval = null;
+        let solderCursor = 50;
+        let solderDir = 1;
+        let activeRecipeTarget = null;
+
+        function openWorkbenchModal() {
+            if (solderingInterval) clearInterval(solderingInterval);
+
+            const recipes = [
+                {
+                    key: 'itemRatna',
+                    title: 'Radio Keroncong Tua (301)',
+                    forWho: 'Untuk Bu Ratna',
+                    desc: 'Memutar lagu kenangan suaminya dan dilengkapi gantungan kunci lonceng.',
+                    ready: gameState.clues.ratna && gameState.inventory.gantunganKunciRusak,
+                    crafted: gameState.crafted.itemRatna
+                },
+                {
+                    key: 'itemDamar',
+                    title: 'Senter Kurir Modifikasi (302)',
+                    forWho: 'Untuk Damar',
+                    desc: 'Senter terang tahan hujan dengan pengait tas baja yang baru.',
+                    ready: gameState.clues.damar && gameState.inventory.radioRongsokan,
+                    crafted: gameState.crafted.itemDamar
+                },
+                {
+                    key: 'itemSora',
+                    title: 'Terarium Lentera Kecil (305)',
+                    forWho: 'Untuk Sora',
+                    desc: 'Toples lumut bercahaya yang bergetar lembut mengikuti rintik hujan.',
+                    ready: gameState.clues.sora && gameState.inventory.sketsaRobek,
+                    crafted: gameState.crafted.itemSora
+                }
+            ];
+
+            const cardsHtml = recipes.map(r => `
+                <div class="bg-slate-900 border ${r.crafted ? 'border-emerald-600/70' : 'border-slate-800'} rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="text-xs font-mono-tech text-amber-300">${r.forWho}</div>
+                        <h3 class="text-base sm:text-lg font-bold text-white">${r.title}</h3>
+                        <p class="text-sm text-slate-300 mt-0.5">${r.desc}</p>
+                    </div>
+                    <div class="shrink-0">
+                        ${r.crafted ? `
+                            <span class="inline-block px-4 py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-semibold text-xs sm:text-sm">✓ Siap Diantar</span>
+                        ` : `
+                            <button onclick="startSolderingMiniGame('${r.key}', '${r.title}')" ${r.ready ? '' : 'disabled'} class="px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all ${r.ready ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 amber-glow' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}">
+                                ${r.ready ? '🔧 Perbaiki Sekarang' : 'Bahan Belum Ada'}
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+
+            openModal(`
+                <div class="space-y-4">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-amber-400">Langkah 3 • Meja Kerja Reparasi</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Perbaiki Barang Tetangga</h2>
+                        <p class="text-sm sm:text-base text-slate-300 mt-1">
+                            Pastikan kamu sudah cek Ventilasi dan mengambil barang di Tempat Sampah Lorong.
+                        </p>
+                    </div>
+                    <div class="space-y-3">
+                        ${cardsHtml}
+                    </div>
+                </div>
+            `);
+        }
+
+        window.startSolderingMiniGame = function(recipeKey, recipeTitle) {
+            activeRecipeTarget = recipeKey;
+            solderCursor = 20;
+            solderDir = 1;
+
+            openModal(`
+                <div class="space-y-5 text-center py-2">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-amber-400">Mini-Game Menyolder</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">${recipeTitle}</h2>
+                        <p class="text-base text-emerald-300 font-semibold mt-1">
+                            Tekan saat jarum di zona hijau!
+                        </p>
+                    </div>
+
+                    <div class="max-w-md mx-auto bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="w-full h-9 bg-slate-900 rounded-xl relative overflow-hidden border border-slate-700">
+                            <!-- Wide Green Zone (28% to 72%) -->
+                            <div class="absolute top-0 bottom-0 left-[28%] w-[44%] bg-emerald-500/30 border-x-2 border-emerald-400 flex items-center justify-center">
+                                <span class="font-mono-tech text-xs font-bold text-emerald-200 uppercase">ZONA HIJAU</span>
+                            </div>
+                            <!-- Moving Needle -->
+                            <div id="solder-needle" class="absolute top-0 bottom-0 w-3 bg-amber-400 rounded shadow-[0_0_12px_#fbbf24]" style="left: 50%;"></div>
+                        </div>
+
+                        <p id="solder-feedback" class="text-sm text-slate-300 h-5">
+                            Fokuskan napasmu lalu klik tombol di bawah.
+                        </p>
+
+                        <button onclick="strikeSolderPoint()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-bold text-base shadow-lg active:scale-95 transition-all">
+                            ⚡ SOLDER SEKARANG!
+                        </button>
+                    </div>
+
+                    <button onclick="openWorkbenchModal()" class="text-xs font-mono-tech text-slate-400 hover:text-white">← Kembali</button>
+                </div>
+            `);
+
+            if (solderingInterval) clearInterval(solderingInterval);
+            solderingInterval = setInterval(() => {
+                if (!gameState.modalOpen) {
+                    clearInterval(solderingInterval);
+                    return;
+                }
+                const speed = 2.0 + (gameState.sensoryLoad / 50);
+                solderCursor += solderDir * speed;
+                if (solderCursor >= 95) { solderCursor = 95; solderDir = -1; }
+                else if (solderCursor <= 5) { solderCursor = 5; solderDir = 1; }
+
+                const needle = document.getElementById('solder-needle');
+                if (needle) needle.style.left = `${solderCursor}%`;
+            }, 25);
+        };
+
+        window.strikeSolderPoint = function() {
+            const feedback = document.getElementById('solder-feedback');
+            if (solderCursor >= 26 && solderCursor <= 74) {
+                clearInterval(solderingInterval);
+                audio.playSFX('chime');
+                gameState.crafted[activeRecipeTarget] = true;
+                gameState.resilience = Math.min(gameState.maxResilience, gameState.resilience + 10);
+                showToast('Berhasil diperbaiki! Siap diantar ke pintu tetangga.', '🔧');
+                updateHUD();
+                openWorkbenchModal();
+            } else {
+                audio.playSFX('door');
+                if (feedback) {
+                    feedback.textContent = 'Sedikit meleset! Tekan tepat saat jarum di kotak hijau.';
+                    feedback.className = 'text-sm text-rose-400 font-semibold h-5';
+                }
+            }
+        };
+
+        // --- 4. SILENT DELIVERY AT DOORS 301, 302, 305 ---
+        function handleNeighborDoorInteraction(whoKey, roomNum, name, itemKey, itemName) {
+            if (gameState.delivered[whoKey]) {
+                showToast(`Kamar ${roomNum} (${name}) sudah menerima bantuanmu.`, '✓');
+                return;
+            }
+
+            if (!gameState.crafted[itemKey]) {
+                showToast(`Perbaiki [${itemName}] dulu di Meja Kerja Kamar 304!`, '⚠️');
+                setMonologue(
+                    `Aku belum membawa ${itemName} untuk ${name}.`,
+                    'Kembali ke Kamar 304 untuk mengamati dan memperbaiki barangnya.'
+                );
+                return;
+            }
+
+            openModal(`
+                <div class="space-y-5">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-emerald-400">Langkah 4 • Pengantaran Sunyi</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Pintu Kamar ${roomNum} (${name})</h2>
+                        <p class="text-base text-slate-300 mt-1">
+                            Letakkan <strong>${itemName}</strong> di depan keset tanpa mengetuk pintu.
+                        </p>
+                    </div>
+
+                    <button onclick="confirmDeliverItem('${whoKey}', '${roomNum}', '${name}', '${itemName}')" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-base transition-all moss-glow">
+                        🎁 Letakkan Diam-diam (-15 Mental)
+                    </button>
+                </div>
+            `);
+        }
+
+        window.confirmDeliverItem = function(whoKey, roomNum, name, itemName) {
+            if (gameState.resilience < 15) {
+                showToast('Mental kurang dari 15! Isi ulang di Kamar 304 dulu.', '⚠️');
+                closeModal();
+                return;
+            }
+
+            audio.playSFX('chime');
+            gameState.resilience -= 15;
+            gameState.sensoryLoad = Math.min(100, gameState.sensoryLoad + 12);
+            gameState.delivered[whoKey] = true;
+
+            const shortReactions = {
+                ratna: 'Bu Ratna membuka pintu dan tersenyum lega mendengar alunan lagu keroncong suaminya.',
+                damar: 'Damar menemukan senter barunya dan berseru syukur karena bisa bekerja malam ini.',
+                sora: 'Sora memeluk Terarium Lentera itu, lalu melangkah naik ke Tangga Atap Gedung!'
+            };
+
+            showToast(`${itemName} berhasil diletakkan di Kamar ${roomNum}!`, '✨');
+            setMonologue(
+                shortReactions[whoKey],
+                gameState.delivered.ratna && gameState.delivered.damar && gameState.delivered.sora
+                    ? 'Semua tetangga terbantu! Sekarang naik ke Tangga Atap di ujung kanan lorong.'
+                    : `Bantuan untuk Kamar ${roomNum} selesai.`
+            );
+
+            closeModal();
+            updateHUD();
+        };
+
+        // --- TAS & CATATAN MODAL ---
+        document.getElementById('btn-open-journal').addEventListener('click', () => {
+            openModal(`
+                <div class="space-y-4">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-amber-400">Ringkasan Progres</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Tas & Catatan Misi</h2>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2.5 text-sm sm:text-base">
+                        <div class="flex justify-between">
+                            <span>📻 Radio Keroncong Tua (301)</span>
+                            <span class="font-semibold ${gameState.delivered.ratna ? 'text-emerald-400' : (gameState.crafted.itemRatna ? 'text-amber-300' : 'text-slate-500')}">
+                                ${gameState.delivered.ratna ? '✓ Sudah Diantar' : (gameState.crafted.itemRatna ? 'Siap Diantar' : 'Belum Dibuat')}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>🔦 Senter Kurir Modifikasi (302)</span>
+                            <span class="font-semibold ${gameState.delivered.damar ? 'text-emerald-400' : (gameState.crafted.itemDamar ? 'text-amber-300' : 'text-slate-500')}">
+                                ${gameState.delivered.damar ? '✓ Sudah Diantar' : (gameState.crafted.itemDamar ? 'Siap Diantar' : 'Belum Dibuat')}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>🌿 Terarium Lentera Kecil (305)</span>
+                            <span class="font-semibold ${gameState.delivered.sora ? 'text-emerald-400' : (gameState.crafted.itemSora ? 'text-amber-300' : 'text-slate-500')}">
+                                ${gameState.delivered.sora ? '✓ Sudah Diantar' : (gameState.crafted.itemSora ? 'Siap Diantar' : 'Belum Dibuat')}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">Tutup</button>
+                </div>
+            `);
+        });
+
+        // --- 5. ROOFTOP CLIMAX & 3 CONCISE ENDING CHOICES ---
+        function openClimaxRooftopModal() {
+            openModal(`
+                <div class="space-y-5">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase text-rose-400">Babak Penentuan • Atap Gedung</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Sora Menangis di Tepi Hujan</h2>
+                        <p class="text-sm sm:text-base text-slate-300 mt-1">
+                            Ia memeluk terarium pemberianmu di dekat pagar atap. Apa yang akan kamu lakukan?
+                        </p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <button onclick="resolveClimaxEnding('avoidant')" class="w-full text-left p-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-base text-white">Pilihan A: Ketuk Pipa dari Kamar</span>
+                                <span class="font-mono-tech text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">Aman</span>
+                            </div>
+                            <p class="text-sm text-slate-300">
+                                Beri tanda suara dari balik pintu lalu panggil Damar tanpa menampakkan diri.
+                            </p>
+                        </button>
+
+                        <button onclick="resolveClimaxEnding('lanterns')" class="w-full text-left p-4 rounded-2xl bg-slate-900 hover:bg-emerald-950/60 border border-emerald-600/60 transition-all">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-base text-emerald-300">Pilihan B: Susun Lentera Terarium dari Bawah</span>
+                                <span class="font-mono-tech text-xs px-2 py-0.5 rounded bg-emerald-950 text-emerald-300">30 Mental</span>
+                            </div>
+                            <p class="text-sm text-slate-200">
+                                Buat jalur cahaya lumut hangat menuju pintu agar Sora mau melangkah mundur.
+                            </p>
+                        </button>
+
+                        <button onclick="resolveClimaxEnding('threshold')" class="w-full text-left p-4 rounded-2xl bg-gradient-to-r from-amber-950/70 to-emerald-950/70 hover:from-amber-900/80 hover:to-emerald-900/80 border-2 border-amber-400 transition-all amber-glow">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-base text-amber-200">Pilihan C: Duduk Menemani dalam Diam</span>
+                                <span class="font-mono-tech text-xs px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold">Ending Sejati</span>
+                            </div>
+                            <p class="text-sm text-amber-100">
+                                Lawan rasa takutmu. Duduk di sampingnya sambil membuka payung tanpa perlu berkata-kata.
+                            </p>
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        window.resolveClimaxEnding = function(choice) {
+            if (choice === 'lanterns' && gameState.resilience < 30) {
+                showToast('Butuh minimal 30 Mental untuk Pilihan B!', '⚠️');
+                return;
+            }
+
+            audio.playSFX('chime');
+            gameState.endingReached = true;
+
+            let title = '';
+            let badge = '';
+            let summary = '';
+
+            if (choice === 'avoidant') {
+                title = 'Akhir A: Penjaga di Balik Bayangan';
+                badge = 'Tetap Tersembunyi';
+                summary = 'Damar datang tepat waktu dan membawa Sora turun dengan selamat. Semua tetanggamu selamat malam ini, meski tirai Kamar 304 masih tertutup rapat.';
+            } else if (choice === 'lanterns') {
+                title = 'Akhir B: Jembatan Cahaya Lumut';
+                badge = 'Empati Tanpa Suara';
+                summary = 'Sora mengikuti barisan lentera terarium yang kau susun dan menjauh dari tepi atap. Ia tahu ada seseorang yang peduli padanya dari balik kaca.';
+            } else {
+                title = 'Akhir Sejati: Kaca yang Sedikit Terbuka';
+                badge = 'Bittersweet Dawn • True Ending';
+                summary = 'Dengan tangan gemetar, kau duduk menemani Sora di bawah satu payung hingga matahari terbit. Sejak hari itu, tirai Kamar 304 terbuka separuh—dan tetanggamu selalu meninggalkan teh hangat serta lukisan kecil di depan pintumu.';
+            }
+
+            openModal(`
+                <div class="space-y-5 text-center py-2">
+                    <div>
+                        <span class="font-mono-tech text-xs uppercase tracking-widest text-emerald-400">${badge}</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">${title}</h2>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-base sm:text-lg text-slate-200 leading-relaxed">
+                        ${summary}
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onclick="openClimaxRooftopModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">
+                            Coba Pilihan Ending Lain
+                        </button>
+                        <button onclick="closeModal(); switchArea('room304', 480); gameState.resilience = 100; gameState.sensoryLoad = 0; updateHUD();" class="flex-1 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm">
+                            Kembali ke Kamar 304
+                        </button>
+                    </div>
+                </div>
+            `);
+        };
+
+        /**************************************************************************
+         * 6. 2D CANVAS RENDERER & GAMEPLAY LOOP
+         **************************************************************************/
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Coordinate conversion between 1000x600 virtual stage and responsive screen
+        function getStageTransform() {
+            const stageW = 1000;
+            const stageH = 600;
+            const scale = Math.min(canvas.width / stageW, canvas.height / stageH) * 0.96;
+            const offsetX = (canvas.width - stageW * scale) / 2;
+            const offsetY = (canvas.height - stageH * scale) / 2;
+            return { stageW, stageH, scale, offsetX, offsetY };
+        }
+
+        function updateSimulation() {
+            if (gameState.modalOpen) return;
+
+            // 1. Player Movement (Keyboard / Touch / Click-to-Move)
+            const moveSpeed = gameState.sensoryLoad > 80 ? 2.6 : 4.2;
+            if (gameState.moveLeft) {
+                gameState.playerX -= moveSpeed;
+                gameState.facing = -1;
+                gameState.targetX = null;
+            } else if (gameState.moveRight) {
+                gameState.playerX += moveSpeed;
+                gameState.facing = 1;
+                gameState.targetX = null;
+            } else if (gameState.targetX !== null) {
+                const diff = gameState.targetX - gameState.playerX;
+                if (Math.abs(diff) > 5) {
+                    gameState.playerX += Math.sign(diff) * moveSpeed;
+                    gameState.facing = Math.sign(diff);
+                } else {
+                    gameState.targetX = null;
+                }
+            }
+            gameState.playerX = Math.max(85, Math.min(935, gameState.playerX));
+
+            // 2. Self-Care Gradual Decay & Sensory Load Dynamics
+            gameState.selfCareTimer++;
+            if (gameState.selfCareTimer > 900) { // Every ~15 seconds of neglect
+                gameState.selfCareTimer = 0;
+                if (gameState.maxResilience > 65) {
+                    gameState.maxResilience -= 2;
+                }
+            }
+
+            if (gameState.groundingAuraTimer > 0) {
+                gameState.groundingAuraTimer--;
+            }
+
+            if (gameState.area === 'room304') {
+                // Inside sanctuary: Sensory Load naturally calms down
+                if (gameState.sensoryLoad > 8) {
+                    gameState.sensoryLoad -= 0.08;
+                }
+            } else if (gameState.area === 'hallway') {
+                // Outside in hallway: ambient sensory tension
+                if (gameState.groundingAuraTimer === 0) {
+                    gameState.sensoryLoad += 0.035;
+                }
+
+                // Update Hallway Pacing Neighbor Silhouette
+                const npc = gameState.hallwayNPC;
+                if (npc.pauseTimer > 0) {
+                    npc.pauseTimer--;
+                } else {
+                    npc.x += npc.dir * npc.speed;
+                    if (npc.x > 820) {
+                        npc.dir = -1;
+                        npc.pauseTimer = 90;
+                    } else if (npc.x < 160) {
+                        npc.dir = 1;
+                        npc.pauseTimer = 90;
+                    }
+                }
+
+                // Check proximity to NPC silhouette
+                const distToNPC = Math.abs(gameState.playerX - npc.x);
+                if (distToNPC < 125 && gameState.groundingAuraTimer === 0) {
+                    gameState.sensoryLoad += (125 - distToNPC) * 0.0055;
+                }
+
+                // Check Sensory Overload (100%)
+                if (gameState.sensoryLoad >= 100) {
+                    gameState.sensoryLoad = 45;
+                    gameState.maxResilience = Math.max(55, gameState.maxResilience - 10);
+                    gameState.resilience = Math.min(gameState.maxResilience, Math.max(15, gameState.resilience - 20));
+                    switchArea('room304', 860);
+                    setMonologue(
+                        'Suara langkah itu terlalu dekat! Napasku tercekat dan pandanganku kabur—aku terpaksa mundur mengunci diri kembali di Kamar 304.',
+                        'SENSORY OVERLOAD! Batas Maksimal Resilience menyusut -10. Masak sup atau rawat terarium untuk pulih.'
+                    );
+                }
+            } else if (gameState.area === 'rooftop') {
+                if (gameState.groundingAuraTimer === 0 && gameState.sensoryLoad < 65) {
+                    gameState.sensoryLoad += 0.03;
+                }
+            }
+
+            // 3. Check Nearest Hotspot
+            const list = HOTSPOTS[gameState.area] || [];
+            let nearest = null;
+            let minDist = 72;
+            for (const h of list) {
+                const d = Math.abs(gameState.playerX - h.x);
+                if (d < minDist) {
+                    minDist = d;
+                    nearest = h;
+                }
+            }
+            gameState.activeHotspot = nearest;
+
+            const promptWrap = document.getElementById('hotspot-prompt');
+            const promptLabel = document.getElementById('hotspot-prompt-label');
+            if (nearest && !gameState.modalOpen) {
+                promptLabel.textContent = nearest.label;
+                promptWrap.classList.remove('hidden');
+            } else {
+                promptWrap.classList.add('hidden');
+            }
+
+            updateHUD();
+        }
+
+        function renderScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background Base Fill
+            if (gameState.area === 'room304') {
+                ctx.fillStyle = '#090706';
+            } else if (gameState.area === 'hallway') {
+                ctx.fillStyle = '#060a0d';
+            } else {
+                ctx.fillStyle = '#04070b';
+            }
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const { stageW, stageH, scale, offsetX, offsetY } = getStageTransform();
+            ctx.save();
+            ctx.translate(offsetX, offsetY);
+            ctx.scale(scale, scale);
+
+            // Subtle camera tremor when Sensory Load is high
+            if (gameState.sensoryLoad > 60) {
+                const shake = ((gameState.sensoryLoad - 60) / 40) * 2.5;
+                ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+            }
+
+            if (gameState.area === 'room304') {
+                drawRoom304(ctx, stageW, stageH);
+            } else if (gameState.area === 'hallway') {
+                drawHallway(ctx, stageW, stageH);
+            } else if (gameState.area === 'rooftop') {
+                drawRooftop(ctx, stageW, stageH);
+            }
+
+            // Draw Protagonist Raka Pradipta
+            drawRaka(ctx, gameState.playerX, 460);
+
+            // Draw Floating Hotspot Indicators
+            drawHotspotMarkers(ctx);
+
+            ctx.restore();
+        }
+
+        // --- DRAW AREA 1: KAMAR 304 (SANCTUARY) ---
+        function drawRoom304(ctx, w, h) {
+            // Warm Sanctuary Wall Backdrop
+            const wallGrad = ctx.createLinearGradient(0, 80, 0, 460);
+            wallGrad.addColorStop(0, '#1c1613');
+            wallGrad.addColorStop(1, '#2b211b');
+            ctx.fillStyle = wallGrad;
+            ctx.fillRect(50, 80, 900, 380);
+
+            // Egg-Carton Acoustic Foam Panels on Wall
+            ctx.fillStyle = 'rgba(15, 12, 10, 0.45)';
+            for (let px = 80; px < 880; px += 90) {
+                ctx.fillRect(px, 120, 65, 110);
+                for (let gx = px + 8; gx < px + 60; gx += 14) {
+                    for (let gy = 130; gy < 220; gy += 16) {
+                        ctx.fillStyle = 'rgba(255, 210, 150, 0.04)';
+                        ctx.fillRect(gx, gy, 7, 7);
+                    }
+                }
+            }
+
+            // Warm Wooden Floor
+            const floorGrad = ctx.createLinearGradient(0, 460, 0, 540);
+            floorGrad.addColorStop(0, '#3b281e');
+            floorGrad.addColorStop(1, '#1a110d');
+            ctx.fillStyle = floorGrad;
+            ctx.fillRect(40, 460, 920, 65);
+            ctx.strokeStyle = '#fbbf2433';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(40, 460);
+            ctx.lineTo(960, 460);
+            ctx.stroke();
+
+            // 1. Kitchen Corner (Left: x=150)
+            ctx.fillStyle = '#33261e';
+            ctx.fillRect(95, 360, 110, 100);
+            // Small Stove & Warm Pot
+            ctx.fillStyle = '#475569';
+            ctx.fillRect(115, 345, 70, 15);
+            ctx.fillStyle = '#d97706';
+            ctx.fillRect(128, 322, 45, 23);
+            // Flame glow
+            const flameGlow = ctx.createRadialGradient(150, 345, 5, 150, 345, 70);
+            flameGlow.addColorStop(0, 'rgba(251, 191, 36, 0.35)');
+            flameGlow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+            ctx.fillStyle = flameGlow;
+            ctx.beginPath();
+            ctx.arc(150, 345, 70, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 2. Moss Terrarium Shelf & Table (x=365)
+            ctx.fillStyle = '#3e2c22';
+            ctx.fillRect(295, 365, 140, 95);
+            // Hanging Warm Lamp Above Terrarium
+            ctx.strokeStyle = '#78716c';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(365, 80);
+            ctx.lineTo(365, 220);
+            ctx.stroke();
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath();
+            ctx.arc(365, 225, 14, Math.PI, 0);
+            ctx.fill();
+
+            // Warm Amber & Moss Light Cone
+            const terraGlow = ctx.createRadialGradient(365, 315, 10, 365, 325, 145);
+            terraGlow.addColorStop(0, 'rgba(52, 211, 153, 0.32)');
+            terraGlow.addColorStop(0.5, 'rgba(245, 158, 11, 0.16)');
+            terraGlow.addColorStop(1, 'rgba(16, 185, 129, 0)');
+            ctx.fillStyle = terraGlow;
+            ctx.beginPath();
+            ctx.arc(365, 325, 145, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3 Glowing Terrarium Jars on Table
+            const drawJar = (jx, jy, jw, jh) => {
+                ctx.fillStyle = 'rgba(167, 243, 208, 0.12)';
+                ctx.strokeStyle = 'rgba(203, 213, 225, 0.6)';
+                ctx.lineWidth = 1.5;
+                ctx.fillRect(jx, jy, jw, jh);
+                ctx.strokeRect(jx, jy, jw, jh);
+                // Moss inside
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(jx + jw / 2, jy + jh - 6, jw / 2.2, Math.PI, 0);
+                ctx.fill();
+                // Cork top
+                ctx.fillStyle = '#b45309';
+                ctx.fillRect(jx + 4, jy - 5, jw - 8, 5);
+            };
+            drawJar(315, 320, 26, 44);
+            drawJar(350, 306, 32, 58);
+            drawJar(392, 324, 24, 40);
+
+            // 3. Repair Workbench (x=565)
+            ctx.fillStyle = '#2d231e';
+            ctx.fillRect(495, 365, 140, 95);
+            // Soldering Iron & Vintage Typewriter & Oscilloscope
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(510, 332, 46, 33);
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(516, 338, 34, 18); // Oscilloscope screen
+            // Desk Lamp
+            ctx.strokeStyle = '#a8a29e';
+            ctx.beginPath();
+            ctx.moveTo(610, 365);
+            ctx.lineTo(620, 320);
+            ctx.lineTo(590, 312);
+            ctx.stroke();
+            const workGlow = ctx.createRadialGradient(575, 340, 5, 575, 340, 90);
+            workGlow.addColorStop(0, 'rgba(251, 191, 36, 0.28)');
+            workGlow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+            ctx.fillStyle = workGlow;
+            ctx.beginPath();
+            ctx.arc(575, 340, 90, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. Frosted Window & Acoustic Air Vent (x=745)
+            // Frosted Rain Window
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(695, 165, 105, 145);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(695, 165, 105, 145);
+
+            // Rain streaks on frosted window
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+            ctx.lineWidth = 1.2;
+            for (let i = 0; i < 12; i++) {
+                const rx = 702 + ((i * 19 + Date.now() * 0.02) % 90);
+                const ry = 172 + ((i * 29 + Date.now() * 0.08) % 120);
+                ctx.beginPath();
+                ctx.moveTo(rx, ry);
+                ctx.lineTo(rx - 2, ry + 12);
+                ctx.stroke();
+            }
+
+            // Acoustic Vent Grill above Window
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(715, 115, 65, 32);
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(715, 115, 65, 32);
+            // Acoustic wave rings pulsing from vent
+            const waveRadius = (Date.now() * 0.03) % 38;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${1 - waveRadius / 38})`;
+            ctx.beginPath();
+            ctx.arc(747, 131, waveRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 5. Door to Hallway (x=900)
+            ctx.fillStyle = '#261c16';
+            ctx.fillRect(855, 230, 80, 230);
+            ctx.strokeStyle = '#574134';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(855, 230, 80, 230);
+            // Multiple Deadbolt Locks (Symbolizing Defensive Isolation)
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(865, 330, 10, 6);
+            ctx.fillRect(865, 345, 10, 6);
+            ctx.fillRect(865, 360, 10, 6);
+
+            // Floating Warm Dust & Moss Spores
+            for (const p of gameState.particles) {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.y < 100) p.y = 450;
+                if (p.x < 60) p.x = 940;
+                if (p.x > 940) p.x = 60;
+
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+        }
+
+        // --- DRAW AREA 2: LORONG LANTAI 3 (STEALTH OF KINDNESS) ---
+        function drawHallway(ctx, w, h) {
+            // Damp Cold Slate-Green Corridor Wall
+            const hallGrad = ctx.createLinearGradient(0, 70, 0, 460);
+            hallGrad.addColorStop(0, '#0c1519');
+            hallGrad.addColorStop(1, '#142228');
+            ctx.fillStyle = hallGrad;
+            ctx.fillRect(30, 70, 940, 390);
+
+            // Cold Concrete Floor
+            ctx.fillStyle = '#111820';
+            ctx.fillRect(30, 460, 940, 65);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(30, 460);
+            ctx.lineTo(970, 460);
+            ctx.stroke();
+
+            // Flickering Fluorescent Ceiling Tubes
+            const flicker = Math.sin(Date.now() * 0.02) > -0.92 ? 0.22 : 0.05;
+            for (const lx of [220, 520, 800]) {
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(lx - 40, 82, 80, 6);
+                const lampGlow = ctx.createRadialGradient(lx, 95, 5, lx, 220, 190);
+                lampGlow.addColorStop(0, `rgba(186, 230, 253, ${flicker})`);
+                lampGlow.addColorStop(1, 'rgba(15, 23, 42, 0)');
+                ctx.fillStyle = lampGlow;
+                ctx.beginPath();
+                ctx.arc(lx, 200, 190, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Draw Neighbor Doors Helper
+            const drawCorridorDoor = (dx, num, owner, isRaka, delivered) => {
+                ctx.fillStyle = isRaka ? '#292019' : '#18262d';
+                ctx.fillRect(dx - 38, 235, 76, 225);
+                ctx.strokeStyle = isRaka ? '#b45309' : (delivered ? '#10b981' : '#334155');
+                ctx.lineWidth = 2.5;
+                ctx.strokeRect(dx - 38, 235, 76, 225);
+
+                // Door Number Plate
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect(dx - 20, 258, 40, 18);
+                ctx.fillStyle = delivered ? '#34d399' : '#cbd5e1';
+                ctx.font = '600 11px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(num, dx, 271);
+
+                // Delivered Care Package on Doormat
+                if (delivered) {
+                    ctx.fillStyle = '#10b981';
+                    ctx.fillRect(dx - 12, 446, 24, 14);
+                    const pkgGlow = ctx.createRadialGradient(dx, 450, 2, dx, 450, 28);
+                    pkgGlow.addColorStop(0, 'rgba(52, 211, 153, 0.6)');
+                    pkgGlow.addColorStop(1, 'rgba(52, 211, 153, 0)');
+                    ctx.fillStyle = pkgGlow;
+                    ctx.beginPath();
+                    ctx.arc(dx, 450, 28, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            };
+
+            drawCorridorDoor(120, '301', 'Bu Ratna', false, gameState.delivered.ratna);
+            drawCorridorDoor(300, '302', 'Damar', false, gameState.delivered.damar);
+            drawCorridorDoor(600, '304', 'Raka', true, false);
+            drawCorridorDoor(765, '305', 'Sora', false, gameState.delivered.sora);
+
+            // Hallway Trash Bin & Discarded Items Box (x=455)
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(430, 395, 50, 65);
+            ctx.strokeStyle = '#475569';
+            ctx.strokeRect(430, 395, 50, 65);
+            if (!gameState.inventory.gantunganKunciRusak || !gameState.inventory.radioRongsokan || !gameState.inventory.sketsaRobek) {
+                // Sparkle indicator on discarded items
+                ctx.fillStyle = '#fbbf24';
+                ctx.beginPath();
+                ctx.arc(455, 385 + Math.sin(Date.now() * 0.005) * 4, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Emergency Stairs to Rooftop (x=915)
+            const allDelivered = gameState.delivered.ratna && gameState.delivered.damar && gameState.delivered.sora;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(875, 210, 75, 250);
+            ctx.strokeStyle = allDelivered ? '#34d399' : '#475569';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(875, 210, 75, 250);
+            // Steps visual
+            for (let s = 0; s < 6; s++) {
+                ctx.fillStyle = '#1e293b';
+                ctx.fillRect(882 + s * 8, 440 - s * 28, 60 - s * 8, 10);
+            }
+
+            // Draw Pacing Neighbor Shadow Silhouette (Acoustic & Social Anxiety Hazard)
+            const npc = gameState.hallwayNPC;
+            ctx.save();
+            // Sensory Anxiety Aura around NPC
+            const auraGrad = ctx.createRadialGradient(npc.x, 390, 10, npc.x, 390, 115);
+            auraGrad.addColorStop(0, 'rgba(244, 63, 94, 0.25)');
+            auraGrad.addColorStop(1, 'rgba(244, 63, 94, 0)');
+            ctx.fillStyle = auraGrad;
+            ctx.beginPath();
+            ctx.arc(npc.x, 390, 115, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Blurry Faceless Watercolor Silhouette
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+            ctx.beginPath();
+            ctx.arc(npc.x, 338, 14, 0, Math.PI * 2); // Head
+            ctx.fill();
+            ctx.fillRect(npc.x - 16, 355, 32, 105); // Coat body
+
+            ctx.fillStyle = 'rgba(244, 63, 94, 0.75)';
+            ctx.font = '500 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('! Langkah Tetangga (Jaga Jarak / Spasi)', npc.x, 310);
+            ctx.restore();
+        }
+
+        // --- DRAW AREA 3: ATAP GEDUNG SAAT HUJAN BADAI (CLIMAX) ---
+        function drawRooftop(ctx, w, h) {
+            // Stormy Night Sky
+            const skyGrad = ctx.createLinearGradient(0, 50, 0, 460);
+            skyGrad.addColorStop(0, '#040811');
+            skyGrad.addColorStop(0.6, '#0d1b2a');
+            skyGrad.addColorStop(1, '#1b263b');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(30, 50, 940, 410);
+
+            // Distant Blurry City Lights in the Rain
+            for (let i = 0; i < 22; i++) {
+                const bx = 60 + i * 42;
+                const bh = 60 + ((i * 37) % 110);
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+                ctx.fillRect(bx, 460 - bh, 34, bh);
+                // Warm blurry bokeh city windows
+                ctx.fillStyle = i % 3 === 0 ? 'rgba(251, 191, 36, 0.18)' : 'rgba(56, 189, 248, 0.14)';
+                ctx.beginPath();
+                ctx.arc(bx + 17, 460 - bh + 25, 9, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Wet Rooftop Concrete Floor
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(30, 460, 940, 65);
+
+            // Chain-link Roof Railing Fence
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(220, 365);
+            ctx.lineTo(920, 365);
+            ctx.stroke();
+            for (let fx = 240; fx <= 900; fx += 60) {
+                ctx.beginPath();
+                ctx.moveTo(fx, 365);
+                ctx.lineTo(fx, 460);
+                ctx.stroke();
+            }
+
+            // Rooftop Stairwell Door (Left: x=130)
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(85, 240, 90, 220);
+            ctx.strokeStyle = '#64748b';
+            ctx.strokeRect(85, 240, 90, 220);
+
+            // Sora Standing Near the Edge (x=740) with Glowing Vibro-Terrarium
+            const sx = 740;
+            // Vibro-Terrarium Glow at her feet
+            const soraGlow = ctx.createRadialGradient(sx - 22, 445, 4, sx - 22, 445, 75);
+            soraGlow.addColorStop(0, 'rgba(52, 211, 153, 0.65)');
+            soraGlow.addColorStop(1, 'rgba(52, 211, 153, 0)');
+            ctx.fillStyle = soraGlow;
+            ctx.beginPath();
+            ctx.arc(sx - 22, 445, 75, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sora Silhouette
+            ctx.fillStyle = '#cbd5e1';
+            ctx.beginPath();
+            ctx.arc(sx, 345, 13, 0, Math.PI * 2); // Head
+            ctx.fill();
+            ctx.fillStyle = '#334155';
+            ctx.beginPath();
+            ctx.moveTo(sx - 16, 360);
+            ctx.lineTo(sx + 16, 360);
+            ctx.lineTo(sx + 22, 460);
+            ctx.lineTo(sx - 22, 460);
+            ctx.closePath();
+            ctx.fill();
+
+            // Pouring Rain Streaks across the Rooftop
+            ctx.strokeStyle = 'rgba(186, 230, 253, 0.38)';
+            ctx.lineWidth = 1.3;
+            for (const r of gameState.rainDrops) {
+                r.y += r.speed;
+                r.x -= 1.8;
+                if (r.y > 465) {
+                    r.y = 55;
+                    r.x = 40 + Math.random() * 920;
+                }
+                ctx.beginPath();
+                ctx.moveTo(r.x, r.y);
+                ctx.lineTo(r.x - 4, r.y + r.len);
+                ctx.stroke();
+            }
+        }
+
+        // --- DRAW PROTAGONIST: RAKA PRADIPTA ---
+        function drawRaka(ctx, x, floorY) {
+            ctx.save();
+            const bob = (gameState.moveLeft || gameState.moveRight || gameState.targetX !== null)
+                ? Math.sin(Date.now() * 0.015) * 3.5
+                : Math.sin(Date.now() * 0.004) * 1.2;
+
+            // Grounding Calm Aura if active
+            if (gameState.groundingAuraTimer > 0) {
+                const aura = ctx.createRadialGradient(x, floorY - 55, 8, x, floorY - 55, 68);
+                aura.addColorStop(0, 'rgba(52, 211, 153, 0.38)');
+                aura.addColorStop(1, 'rgba(52, 211, 153, 0)');
+                ctx.fillStyle = aura;
+                ctx.beginPath();
+                ctx.arc(x, floorY - 55, 68, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Soft Shadow on Floor
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.beginPath();
+            ctx.ellipse(x, floorY, 22, 5, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Legs
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(x - 10, floorY - 42, 8, 42);
+            ctx.fillRect(x + 2, floorY - 42, 8, 42);
+
+            // Oversized Defensive Dark Hoodie Torso
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.roundRect(x - 18, floorY - 96 + bob, 36, 58, 10);
+            ctx.fill();
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Warm Amber Heart/Resilience Core Glow inside Raka's chest
+            const heartRadius = 6 + (gameState.resilience / 100) * 14;
+            const heartGlow = ctx.createRadialGradient(x, floorY - 68 + bob, 2, x, floorY - 68 + bob, heartRadius);
+            heartGlow.addColorStop(0, 'rgba(251, 191, 36, 0.85)');
+            heartGlow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+            ctx.fillStyle = heartGlow;
+            ctx.beginPath();
+            ctx.arc(x, floorY - 68 + bob, heartRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Head & Drawn-up Hood
+            ctx.fillStyle = '#e2e8f0'; // Pale skin from isolation
+            ctx.beginPath();
+            ctx.arc(x + gameState.facing * 2, floorY - 110 + bob, 13, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hood draped over head
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.arc(x, floorY - 112 + bob, 15.5, Math.PI * 0.85, Math.PI * 2.15);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // --- DRAW HOTSPOT MARKERS ---
+        function drawHotspotMarkers(ctx) {
+            const list = HOTSPOTS[gameState.area] || [];
+            for (const h of list) {
+                const isActive = gameState.activeHotspot && gameState.activeHotspot.id === h.id;
+                const floatY = 185 + Math.sin(Date.now() * 0.004 + h.x) * 4;
+
+                ctx.save();
+                // Connecting dotted line
+                ctx.strokeStyle = isActive ? 'rgba(251, 191, 36, 0.65)' : 'rgba(148, 163, 184, 0.22)';
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(h.x, floatY + 14);
+                ctx.lineTo(h.x, 310);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Diamond Marker
+                ctx.translate(h.x, floatY);
+                ctx.rotate(Math.PI / 4);
+                ctx.fillStyle = isActive ? '#fbbf24' : '#1e293b';
+                ctx.strokeStyle = isActive ? '#fef3c7' : '#64748b';
+                ctx.lineWidth = 2;
+                ctx.fillRect(-7, -7, 14, 14);
+                ctx.strokeRect(-7, -7, 14, 14);
+                ctx.restore();
+
+                // Short Label Pill
+                ctx.font = isActive ? '600 11px "Inter", sans-serif' : '400 10px "Inter", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = isActive ? '#fde68a' : 'rgba(203, 213, 225, 0.7)';
+                ctx.fillText(h.shortTitle, h.x, floatY - 14);
+            }
+        }
+
+        /**************************************************************************
+         * 7. INPUT LISTENERS (KEYBOARD, MOUSE CLICK-TO-MOVE, TOUCH)
+         **************************************************************************/
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+                gameState.moveLeft = true;
+            } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+                gameState.moveRight = true;
+            } else if (e.code === 'KeyE' || e.code === 'Enter') {
+                interactCurrentHotspot();
+            } else if (e.code === 'Space') {
+                e.preventDefault();
+                triggerGrounding();
+            } else if (e.code === 'Escape' && gameState.modalOpen) {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+                gameState.moveLeft = false;
+            } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+                gameState.moveRight = false;
+            }
+        });
+
+        // Canvas Click / Tap to Move & Interact
+        canvas.addEventListener('pointerdown', (e) => {
+            audio.init();
+            if (gameState.modalOpen) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const { scale, offsetX } = getStageTransform();
+            const worldX = (clickX - offsetX) / scale;
+
+            // Check if player clicked directly near a hotspot
+            const list = HOTSPOTS[gameState.area] || [];
+            for (const h of list) {
+                if (Math.abs(worldX - h.x) < 42) {
+                    if (Math.abs(gameState.playerX - h.x) < 70) {
+                        interactCurrentHotspot();
+                        return;
+                    } else {
+                        gameState.targetX = h.x;
+                        return;
+                    }
+                }
+            }
+
+            gameState.targetX = Math.max(85, Math.min(935, worldX));
+        });
+
+        // Touch / UI Buttons
+        const btnLeft = document.getElementById('btn-move-left');
+        const btnRight = document.getElementById('btn-move-right');
+        const btnAction = document.getElementById('btn-action-main');
+        const btnHotspot = document.getElementById('btn-interact-hotspot');
+        const btnGrounding = document.getElementById('btn-grounding');
+        const btnAudio = document.getElementById('btn-toggle-audio');
+
+        const bindHoldButton = (btn, prop) => {
+            btn.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                audio.init();
+                gameState[prop] = true;
+            });
+            btn.addEventListener('pointerup', () => { gameState[prop] = false; });
+            btn.addEventListener('pointerleave', () => { gameState[prop] = false; });
+        };
+        bindHoldButton(btnLeft, 'moveLeft');
+        bindHoldButton(btnRight, 'moveRight');
+
+        btnAction.addEventListener('click', () => {
+            audio.init();
+            interactCurrentHotspot();
+        });
+        btnHotspot.addEventListener('click', () => {
+            audio.init();
+            interactCurrentHotspot();
+        });
+        btnGrounding.addEventListener('click', () => {
+            audio.init();
+            triggerGrounding();
+        });
+        btnAudio.addEventListener('click', () => {
+            audio.init();
+            const muted = audio.toggleMute();
+            document.getElementById('audio-icon').textContent = muted ? '🔇' : '🔊';
+        });
+
+        // Start Game from Title Screen
+        document.getElementById('btn-start-game').addEventListener('click', () => {
+            audio.init();
+            audio.playSFX('chime');
+            const titleScreen = document.getElementById('title-screen');
+            titleScreen.style.opacity = '0';
+            setTimeout(() => {
+                titleScreen.classList.add('hidden');
+            }, 950);
+        });
+
+        // Main Animation Loop
+        function gameLoop() {
+            updateSimulation();
+            renderScene();
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.onload = function () {
+            updateHUD();
+            gameLoop();
+        };
+    </script>
+</body>
+</html>
