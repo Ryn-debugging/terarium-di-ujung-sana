@@ -210,7 +210,7 @@ function startRadioTuningGame() {
         const clarity = Math.max(0, 1 - diff / 4.5);
         const inZone = diff <= 0.45;
 
-        audio.updateRadioTuning(clarity);
+        audio.updateRadioTuning(clarity, dt);
 
         if (inZone) {
             lockProgress += dt;
@@ -268,12 +268,20 @@ function startFlashlightWiringGame() {
         { id: 'neg', label: '- Ground Biru', color: '#38bdf8' },
         { id: 'led', label: '⚡ Driver LED', color: '#fbbf24' }
     ];
-    // Shuffled right side order
-    const rightOrder = [
+    // Randomized right-side PCB terminal order per session (Fisher-Yates)
+    const rightPool = [
         { id: 'led', label: 'Pin Bohlam LED' },
         { id: 'pos', label: 'Pin Daya (+)' },
         { id: 'neg', label: 'Pin Massa (-)' }
     ];
+    for (let i = rightPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [rightPool[i], rightPool[j]] = [rightPool[j], rightPool[i]];
+    }
+    if (rightPool.every((r, idx) => r.id === wires[idx].id)) {
+        [rightPool[0], rightPool[1]] = [rightPool[1], rightPool[0]];
+    }
+    const rightOrder = rightPool;
 
     let selectedLeft = null;
     const connected = { pos: false, neg: false, led: false };
@@ -386,9 +394,17 @@ function startTerrariumCraftGame() {
     let layersDone = { stones: false, soil: false, moss: false };
     let humidity = 30;
     let sensorAttached = false;
-    let testTaps = 0;
+    let resonanceHits = 0;
+    let rhythmFeedback = 'Sentuh tombol saat lingkaran air menyentuh zona hijau!';
+    let animId = null;
+
+    const stopPiezoLoop = () => {
+        if (animId) cancelAnimationFrame(animId);
+        animId = null;
+    };
 
     const render = () => {
+        stopPiezoLoop();
         const layersReady = layersDone.stones && layersDone.soil && layersDone.moss;
         const humIdeal = humidity >= 65 && humidity <= 80;
 
@@ -430,18 +446,16 @@ function startTerrariumCraftGame() {
                         ${humIdeal ? 'Lanjut Pasang Sensor Hujan →' : 'Sesuaikan ke 65% – 80% dulu'}
                     </button>
                 ` : `
-                    <p class="m-desc">Langkah 3: Pasang sensor getar piezo di tutup gabus agar Sora dapat <strong>melihat detak hujan lewat cahaya</strong>.</p>
+                    <p class="m-desc">Langkah 3: Kalibrasi sensor piezo agar Sora bisa <strong>melihat detak rintik hujan lewat pendar cahaya</strong>.</p>
                     <div class="m-card" style="text-align:center;">
-                        <div style="font-size:44px; margin-bottom:6px; filter:${testTaps > 0 ? 'drop-shadow(0 0 18px #34d399)' : 'none'};">
-                            ${sensorAttached ? '✨🫙✨' : '🫙'}
-                        </div>
                         ${!sensorAttached ? `
+                            <div style="font-size:44px; margin-bottom:10px;">🫙</div>
                             <button id="btn-attach-piezo" class="m-btn amber">⚡ Solder Sensor Piezo & LED Hangat</button>
                         ` : `
-                            <p style="font-size:13px; color:#a7f3d0; margin:0 0 10px;">
-                                Sensor aktif! Ketuk kaca 2 kali untuk menguji pendaran cahaya hujan (${testTaps}/2).
-                            </p>
-                            <button id="btn-test-tap" class="m-btn emerald">💧 Ketuk Kaca (Uji Getaran Hujan)</button>
+                            <canvas id="piezo-rhythm-canvas" width="240" height="128" style="width:100%; max-width:240px; height:128px; margin:0 auto 10px; display:block; background:#030712; border-radius:12px; border:1px solid #1e293b;"></canvas>
+                            <div class="font-mono-tech" style="font-size:12px; color:#6ee7b7; margin-bottom:6px;">Resonansi Terkalibrasi: ${resonanceHits} / 3</div>
+                            <p id="piezo-feedback" style="font-size:12.5px; color:#fde68a; margin:0 0 10px;">${rhythmFeedback}</p>
+                            <button id="btn-test-tap" class="m-btn emerald">💧 Ketuk Kaca Saat Cincin Hijau</button>
                         `}
                     </div>
                 `}
@@ -481,13 +495,74 @@ function startTerrariumCraftGame() {
                     render();
                 });
             } else {
+                const pCanvas = document.getElementById('piezo-rhythm-canvas');
+                const pCtx = pCanvas ? pCanvas.getContext('2d') : null;
+                let phase = 0.35; // start near sweet spot so first beat feels responsive
+                let lastT = performance.now();
+
+                const isInSweetSpot = () => {
+                    const ringR = 54 - (phase % 1) * 46;
+                    return ringR >= 16 && ringR <= 38;
+                };
+
+                const tickRhythm = (now) => {
+                    if (!gameState.modalOpen || step !== 3 || !sensorAttached) {
+                        stopPiezoLoop();
+                        return;
+                    }
+                    const dt = Math.min(0.05, (now - lastT) / 1000);
+                    lastT = now;
+                    phase = (phase + dt * 0.68) % 1;
+
+                    if (pCtx) {
+                        const w = pCanvas.width;
+                        const h = pCanvas.height;
+                        pCtx.clearRect(0, 0, w, h);
+
+                        // Target emerald zone (r = 18..36)
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, 27, 0, Math.PI * 2);
+                        pCtx.strokeStyle = 'rgba(16, 185, 129, 0.32)';
+                        pCtx.lineWidth = 14;
+                        pCtx.stroke();
+
+                        // Glowing center moss LED core
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, 8 + resonanceHits * 2, 0, Math.PI * 2);
+                        pCtx.fillStyle = isInSweetSpot() ? '#34d399' : '#10b981';
+                        pCtx.fill();
+
+                        // Converging raindrop ripple
+                        const r = 54 - phase * 46;
+                        const inZone = isInSweetSpot();
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+                        pCtx.strokeStyle = inZone ? '#fde68a' : '#38bdf8';
+                        pCtx.lineWidth = inZone ? 3.5 : 2;
+                        pCtx.stroke();
+                    }
+                    animId = requestAnimationFrame(tickRhythm);
+                };
+
+                activeMiniGameCleanup = stopPiezoLoop;
+                animId = requestAnimationFrame(tickRhythm);
+
                 document.getElementById('btn-test-tap').addEventListener('click', () => {
-                    audio.playSFX('chime');
-                    testTaps++;
-                    if (testTaps >= 2) {
-                        completeRepairCraft('itemSora', 'Terarium Lentera Kecil (305)', 'Sekarang antar diam-diam ke keset Pintu 305 untuk Sora.');
+                    if (isInSweetSpot()) {
+                        audio.playSFX('chime');
+                        resonanceHits++;
+                        rhythmFeedback = '✨ Resonansi akurat! Lentera memantulkan cahaya hijau hangat.';
+                        if (resonanceHits >= 3) {
+                            stopPiezoLoop();
+                            completeRepairCraft('itemSora', 'Terarium Lentera Kecil (305)', 'Sekarang antar diam-diam ke keset Pintu 305 untuk Sora.');
+                        } else {
+                            render();
+                        }
                     } else {
-                        render();
+                        audio.playSFX('water');
+                        rhythmFeedback = 'Sedikit meleset—tunggu cincin air biru menyala emas di zona hijau!';
+                        const fb = document.getElementById('piezo-feedback');
+                        if (fb) fb.textContent = rhythmFeedback;
                     }
                 });
             }

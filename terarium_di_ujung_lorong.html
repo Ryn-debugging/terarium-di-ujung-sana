@@ -208,7 +208,7 @@ body.mode-outside .letterbox-bottom {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 18px;
+    padding: calc(18px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-left));
     overflow-y: auto;
     transition: opacity 0.7s ease;
 }
@@ -316,7 +316,7 @@ body.mode-outside .letterbox-bottom {
     right: 0;
     z-index: 30;
     pointer-events: none;
-    padding: 12px 18px 0;
+    padding: calc(12px + env(safe-area-inset-top)) calc(18px + env(safe-area-inset-right)) 0 calc(18px + env(safe-area-inset-left));
 }
 
 .hud-grid {
@@ -561,7 +561,7 @@ main#stage-wrap {
 /* Contextual Hotspot Floating Button */
 #hotspot-prompt {
     position: fixed;
-    bottom: 108px;
+    bottom: calc(108px + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     z-index: 32;
@@ -607,7 +607,7 @@ main#stage-wrap {
     right: 0;
     z-index: 30;
     pointer-events: none;
-    padding: 0 16px 14px;
+    padding: 0 calc(16px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
 }
 
 .footer-inner {
@@ -697,7 +697,7 @@ main#stage-wrap {
 /* Mobile Responsive Layout (< 860px) */
 @media (max-width: 860px) {
     #game-hud {
-        padding: 8px 10px 0;
+        padding: calc(8px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 0 calc(10px + env(safe-area-inset-left));
     }
 
     .hud-grid {
@@ -770,7 +770,7 @@ main#stage-wrap {
     }
 
     #game-footer {
-        padding: 0 10px 10px;
+        padding: 0 calc(10px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));
     }
 
     .footer-inner {
@@ -807,23 +807,23 @@ main#stage-wrap {
     }
 
     #hotspot-prompt {
-        bottom: 134px;
+        bottom: calc(148px + env(safe-area-inset-bottom));
     }
 
     .hotspot-btn {
-        padding: 8px 14px;
-        font-size: 13px;
+        padding: 8px 13px;
+        font-size: 12.5px;
     }
 }
 
 @media (max-height: 500px) {
-    #game-hud { padding: 6px 10px 0; }
+    #game-hud { padding: calc(6px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 0 calc(10px + env(safe-area-inset-left)); }
     .hud-grid { display: none; }
     #mobile-hud-strip { display: flex; flex-direction: row; gap: 8px; align-items: center; }
     .mobile-top-row { flex: 1; min-width: 0; padding: 5px 9px; }
     .mobile-mission-row { flex: 1; min-width: 0; padding: 5px 9px; }
     #mobile-mission-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #game-footer { padding: 0 10px 6px; }
+    #game-footer { padding: 0 calc(10px + env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left)); }
     .footer-inner { flex-direction: row; align-items: center; padding: 6px 12px; gap: 10px; }
     .monologue-box { flex: 1; min-width: 0; }
     #monologue-text { font-size: 12px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -831,7 +831,7 @@ main#stage-wrap {
     .controls-cluster { width: auto; justify-content: flex-end; gap: 6px; flex-shrink: 0; }
     .ctrl-btn { height: 38px; min-width: 38px; padding: 0 10px; }
     .ctrl-btn.primary { flex: 0 0 auto; min-width: 72px; }
-    #hotspot-prompt { bottom: 62px; }
+    #hotspot-prompt { bottom: calc(62px + env(safe-area-inset-bottom)); }
 }
 
 /* Modal System */
@@ -844,7 +844,7 @@ main#stage-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px;
+    padding: calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
 }
 
 #modal-card {
@@ -1178,7 +1178,7 @@ input[type="range"].custom-slider {
                 </svg>
             </div>
 
-            <span class="title-kicker">Kamar 304 • Rusunawa Asoka • 3 Malam</span>
+            <span class="title-kicker">Kamar 304 • Rusunawa Asoka • 3 Malam (v3.0)</span>
             <h1 class="title-heading">Terarium di Ujung Lorong</h1>
             <p class="title-sub">
                 Bantu tetanggamu dari balik kamar secara diam-diam tanpa harus bertatap muka.
@@ -1191,15 +1191,15 @@ input[type="range"].custom-slider {
             <div class="title-rules">
                 <div class="rule-row">
                     <span class="rule-num amber">1</span>
-                    <span><strong style="color:#fcd34d;">Ketahanan Mental:</strong> Masak sup (2x per malam) & rawat lumut di kamar 304.</span>
+                    <span><strong style="color:#fcd34d;">Ketahanan Mental:</strong> Masak sup (2x per malam), rawat lumut, &amp; jenguk pintu tetangga di kamar 304/lorong.</span>
                 </div>
                 <div class="rule-row">
                     <span class="rule-num rose">2</span>
-                    <span><strong style="color:#fda4af;">Cemas Sosial & Sembunyi:</strong> Gunakan Spot Sembunyi / <code class="font-mono-tech">[S]</code> di lorong & <code class="font-mono-tech">[SPASI]</code> untuk tarik napas.</span>
+                    <span><strong style="color:#fda4af;">Stealth Taktis:</strong> Waspadai <code class="font-mono-tech">⚠️ Gagang Berderit</code> &amp; kebisingan langkah. Tekan <code class="font-mono-tech">[S]</code> / Sembunyi atau <code class="font-mono-tech">[SPASI]</code>.</span>
                 </div>
                 <div class="rule-row">
                     <span class="rule-num emerald">3</span>
-                    <span><strong style="color:#6ee7b7;">Empati Sunyi:</strong> Dengar kabar dari ventilasi, perbaiki barang dengan unik tiap malam, & temukan balasan mereka.</span>
+                    <span><strong style="color:#6ee7b7;">Empati Sunyi:</strong> Dengar ventilasi, perbaiki barang di meja kerja, &amp; jaga Mental ≥ 50 untuk Akhir Sejati.</span>
                 </div>
             </div>
 
@@ -1378,7 +1378,7 @@ input[type="range"].custom-slider {
 
     <script>
 /**************************************************************************
- * STORY, NIGHT PROGRESSION, HOTSPOTS & ENDINGS DATA
+ * STORY, NIGHT PROGRESSION, HOTSPOTS & ENDINGS DATA (v3.0)
  **************************************************************************/
 const NIGHT_DATA = {
     1: {
@@ -1387,7 +1387,7 @@ const NIGHT_DATA = {
         timeLabel: '22:15 WIB',
         rainIntensity: 0.45,
         thunderChance: 0,
-        npcSpeed: 54, // pixels per second
+        npcSpeed: 56, // pixels per second
         npcFlipChance: 0.08,
         neighborKey: 'ratna',
         roomNum: '301',
@@ -1395,6 +1395,9 @@ const NIGHT_DATA = {
         inventoryKey: 'brokenRadio',
         craftedKey: 'itemRatna',
         itemTitle: 'Radio Keroncong Tua & Gantungan Lonceng',
+        trashX: 460,
+        trashShortTitle: 'Kotak Rongsokan',
+        trashLabel: 'Periksa Kotak Rongsokan Tengah Lorong',
         trashTitle: 'Radio Tabung Berkarat & Gantungan Kunci Patah',
         trashDesc: 'Radio lama milik almarhum Pak Hadi yang kabel speakernya putus beserta gantungan lonceng kamar 301.',
         ventQuotes: [
@@ -1414,22 +1417,25 @@ const NIGHT_DATA = {
         title: 'Malam Kedua: Badai dan Lampu Padam',
         timeLabel: '23:40 WIB',
         rainIntensity: 0.85,
-        thunderChance: 0.12,
-        npcSpeed: 74,
-        npcFlipChance: 0.22,
+        thunderChance: 0.14,
+        npcSpeed: 78,
+        npcFlipChance: 0.24,
         neighborKey: 'damar',
         roomNum: '302',
         neighborName: 'Mas Damar',
         inventoryKey: 'brokenFlashlight',
         craftedKey: 'itemDamar',
         itemTitle: 'Senter Kurir Modifikasi & Pengait Baja',
+        trashX: 830,
+        trashShortTitle: 'Sudut Tangga',
+        trashLabel: 'Ambil Senter Jatuh Dekat Tangga Kanan',
         trashTitle: 'Senter Tahan Air Korslet & Pengait Tas Patah',
-        trashDesc: 'Senter kerja Damar yang kemasukan air hujan beserta pengait tali tas kurir yang patah dua.',
+        trashDesc: 'Senter kerja Damar yang terjatuh di dekat tangga darurat ujung kanan lorong beserta pengait tas kurir yang patah dua.',
         ventQuotes: [
             'Terdengar bunyi barang jatuh keras dan helaan napas lelah dari Kamar 302.',
-            '"Sial, pengait tasnya patah, senternya juga mati... padahal masih ada paket obat ke ujung kota malam ini," bisik Damar cemas.'
+            '"Sial, pengait tasnya patah dan senterku jatuh dekat tangga darurat... padahal masih ada paket obat ke ujung kota malam ini," bisik Damar cemas.'
         ],
-        ventSummary: 'Mas Damar (Kamar 302), kurir shift malam, kehabisan senter dan pengait tas di tengah hujan deras saat harus mengantar obat.',
+        ventSummary: 'Mas Damar (Kamar 302), kurir shift malam, menjatuhkan senter dan pengait tasnya di ujung kanan lorong dekat tangga darurat.',
         deliveryReaction: 'Damar langsung menyalakan senter modifikasi itu di depan pintu. "Gila, terang banget! Siapa pun di lantai ini, makasih banget ya!" serunya lega.',
         replyTitle: 'Termos Kecil Kopi Jahe & Memo Damar',
         replyIcon: '☕',
@@ -1443,21 +1449,24 @@ const NIGHT_DATA = {
         timeLabel: '01:15 WIB',
         rainIntensity: 1.0,
         thunderChance: 0.35,
-        npcSpeed: 90,
-        npcFlipChance: 0.32,
+        npcSpeed: 94,
+        npcFlipChance: 0.34,
         neighborKey: 'sora',
         roomNum: '305',
         neighborName: 'Sora',
         inventoryKey: 'tornSketchGlass',
         craftedKey: 'itemSora',
         itemTitle: 'Terarium Lentera Sensor Hujan',
+        trashX: 210,
+        trashShortTitle: 'Koridor Barat',
+        trashLabel: 'Pungut Kaca & Sketsa di Antara 301–302',
         trashTitle: 'Toples Kaca Retak & Sketsa Langit Robek',
-        trashDesc: 'Kepingan sketsa langit malam yang robek dan botol kaca kecil di tempat sampah—beserta sobekan catatan "Atap gedung...".',
+        trashDesc: 'Kepingan sketsa langit malam yang robek dan botol kaca kecil terbawa angin badai ke lorong barat—beserta sobekan catatan "Atap gedung...".',
         ventQuotes: [
             'Kamar 305 terlalu sunyi. Tidak ada suara televisi, tidak ada gumaman—hanya suara kertas dirobek pelan.',
             'Kau ingat catatan lama pengurus rusun: Sora, pelukis muda di 305, kehilangan pendengarannya akibat saraf. Di tengah badai sekeras ini, dunianya tetap bisu dan terisolasi.'
         ],
-        ventSummary: 'Sora (Kamar 305) perlahan kehilangan pendengaran. Ia merasa terputus dari hujan yang biasa ia lukis—buatkan lentera lumut yang berkedip oleh getaran hujan agar ia bisa melihat ritme hujan.',
+        ventSummary: 'Sora (Kamar 305) perlahan kehilangan pendengaran. Pungut serpihan botol di lorong barat (antara 301–302), lalu rakit lentera getar hujan agar ia bisa melihat ritme hujan.',
         deliveryReaction: 'Sora membuka pintu perlahan, memeluk Terarium Lentera yang berpendar hijau lembut. Tanpa mendengar bunyi sekitarmu, ia berjalan pelan menuju Tangga Atap...',
         replyTitle: 'Sketsa Payung & Teh Chamomile',
         replyIcon: '🎨',
@@ -1467,11 +1476,40 @@ const NIGHT_DATA = {
     }
 };
 
+const DOOR_REVISIT_DATA = {
+    ratna: {
+        2: 'Dari balik pintu 301 terdengar senandung pelan Bu Ratna mengikuti lagu keroncong lama. Lampu kamarnya tampak lebih hangat malam ini.',
+        3: 'Bu Ratna tertidur pulas ditemani desis radio 88.4 MHz yang stabil meski badai menghantam kaca lorong.'
+    },
+    damar: {
+        3: 'Tertempel secarik sticky note kecil di pintu 302: "Paket obat malam aman sentosa! Tetap sehat terus, penghuni 304."'
+    }
+};
+
+const KEEPSAKE_REFLECTIONS = {
+    ratna: {
+        icon: '🍡',
+        title: 'Piring Kue Putu Bu Ratna',
+        dawnText: 'Piring keramik kecil itu kini bersih di sudut meja. Aku tak pernah menyangka kue sederhana bisa membuat ruangan sunyi ini terasa lebih hidup.'
+    },
+    damar: {
+        icon: '☕',
+        title: 'Termos Kopi Jahe Mas Damar',
+        dawnText: 'Masih ada sisa aroma jahe hangat dari termos kecil ini. Kadang keberanian cukup berbentuk pesan singkat: "lorong ini tidak sedingin kemarin."'
+    },
+    sora: {
+        icon: '🎨',
+        title: 'Lukisan Payung Cat Air Sora',
+        dawnText: 'Sora melukis kita berdua di bawah payung kuning—tanpa wajah yang jelas, cukup dua bahu yang tak lagi merasa sendirian di dunia.'
+    }
+};
+
 const HOTSPOTS = {
     room304: [
         { id: 'kitchen', x: 150, shortTitle: 'Kompor Sup', label: 'Masak Sup Hangat (+30 Mental)' },
         { id: 'terrarium', x: 365, shortTitle: 'Terarium Lumut', label: 'Semprot & Rawat Lumut (+20 Mental)' },
-        { id: 'workbench', x: 565, shortTitle: 'Meja Kerja', label: 'Perbaiki Barang di Meja Kerja' },
+        { id: 'workbench', x: 545, shortTitle: 'Meja Kerja', label: 'Perbaiki Barang di Meja Kerja' },
+        { id: 'keepsakes', x: 635, shortTitle: 'Kenangan', label: 'Lihat Bingkisan Kenangan Tetangga' },
         { id: 'vent_window', x: 745, shortTitle: 'Ventilasi', label: 'Dengarkan Kabar dari Ventilasi' },
         { id: 'door_gift', x: 835, shortTitle: 'Bingkisan Pintu', label: 'Ambil Balasan Sunyi di Depan Pintu!' },
         { id: 'door_out', x: 915, shortTitle: 'Pintu Lorong', label: 'Keluar ke Lorong Lantai 3' }
@@ -1501,50 +1539,79 @@ const ENDINGS_DATA = {
         title: 'Akhir A: Penjaga di Balik Bayangan',
         badge: 'Avoidant Ending',
         summary: 'Kau memberi isyarat cahaya ke lantai bawah agar Mas Damar naik menjemput Sora, lalu mundur sebelum siapa pun melihatmu. Semua tetangga selamat malam ini—namun tirai Kamar 304 kembali tertutup rapat.',
-        epilogueHint: 'Coba lagi di atap dengan Mental ≥ 30 atau beranikan diri melangkah untuk membuka akhir lain.'
+        epilogueHint: 'Jaga kesehatan mental (≥ 30 untuk Akhir B, atau ≥ 50 untuk Akhir Sejati) saat naik ke atap.'
     },
     lanterns: {
         id: 'lanterns',
         title: 'Akhir B: Jembatan Cahaya Lumut',
         badge: 'Silent Empathy Ending',
         summary: 'Kau menyusun barisan toples lentera lumut membentuk jalur hangat di atas beton basah. Karena Sora peka pada cahaya, ia menoleh melihat pendar hijau itu dan perlahan melangkah mundur menuju pintu. Ia tahu ada jiwa baik yang menjaganya dari balik kaca.',
-        epilogueHint: 'Satu langkah keberanian lagi bisa membuka Akhir Sejati.'
+        epilogueHint: 'Pertahankan Ketahanan Mental ≥ 50 agar cukup kuat membuka Akhir Sejati.'
     },
     threshold: {
         id: 'threshold',
         title: 'Akhir Sejati: Kaca yang Sedikit Terbuka',
         badge: 'Bittersweet Dawn • True Ending',
         summary: 'Melawan detak cemas di dadamu, kau membuka payung dan duduk tenang di samping Sora hingga badai reda dan fajar keemasan menyingsing. Tanpa satu kata pun terucap, ia mengerti kau hadir. Sejak pagi itu, tirai Kamar 304 terbuka separuh—dan sebuah sketsa kecil serta teh hangat menunggumu di depan pintu.',
-        epilogueHint: 'Selamat! Kamu menemukan Akhir Sejati. Jelajahi Kamar 304 dalam suasana fajar pagi!'
+        epilogueHint: 'Selamat! Kamu menemukan Akhir Sejati. Jelajahi Kamar 304 & periksa kenangan di pagi fajar!'
     }
 };
 
 
 /**************************************************************************
- * PROCEDURAL WEB AUDIO ENGINE (Spatial Audio, Rain, Keroncong, SFX)
+ * PROCEDURAL WEB AUDIO ENGINE v3.0
+ * (Sequenced Keroncong Melody, Spatial Audio, Visibility Suspend, SFX)
  **************************************************************************/
+const KERONCONG_MELODY = [
+    293.66, 329.63, 349.23, 440.00, 392.00, 349.23,
+    329.63, 293.66, 261.63, 293.66, 329.63, 293.66
+];
+
 class SoundscapeEngine {
     constructor() {
         this.ctx = null;
         this.isMuted = false;
         this.isStarted = false;
+        this.isHidden = false;
         this.rainGain = null;
         this.rainFilter = null;
         this.noiseBuffer = null;
         this.pianoTimer = null;
         this.heartbeatTimer = null;
+
         this.keroncongCooldown = 0;
+        this.keroncongStep = 0;
+        this.radioStep = 0;
+        this.radioNoteTimer = 0;
+        this.playerStepTimer = 0;
 
         // Interactive Radio Tuning Nodes
         this.radioStaticNode = null;
         this.radioStaticGain = null;
         this.radioMusicOsc = null;
         this.radioMusicGain = null;
+
+        this.bindLifecycleHandlers();
+    }
+
+    bindLifecycleHandlers() {
+        if (typeof document !== 'undefined') {
+            document.addEventListener('visibilitychange', () => {
+                this.isHidden = document.hidden;
+                if (!this.ctx) return;
+                if (document.hidden) {
+                    this.stopRadioPreview();
+                    this.ctx.suspend().catch(() => {});
+                } else if (!this.isMuted) {
+                    this.ctx.resume().catch(() => {});
+                }
+            });
+        }
     }
 
     init() {
         if (this.isStarted) {
-            if (this.ctx && this.ctx.state === 'suspended') {
+            if (this.ctx && this.ctx.state === 'suspended' && !this.isHidden) {
                 this.ctx.resume().catch(() => {});
             }
             return;
@@ -1628,7 +1695,7 @@ class SoundscapeEngine {
     }
 
     playAmbientNote() {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         if (typeof gameState !== 'undefined' && gameState.sensoryLoad > 74) return;
 
         const isDawn = typeof gameState !== 'undefined' && (gameState.isDawn || (gameState.cutscene && gameState.cutscene.progress > 0.6 && gameState.cutscene.type === 'threshold'));
@@ -1660,7 +1727,7 @@ class SoundscapeEngine {
     }
 
     checkHeartbeat() {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         if (typeof gameState === 'undefined' || gameState.sensoryLoad < 45) return;
 
         const intensity = Math.min(1, (gameState.sensoryLoad - 40) / 60);
@@ -1683,7 +1750,7 @@ class SoundscapeEngine {
     }
 
     playSpatialFootstep(pan, proximity) {
-        if (!this.isStarted || this.isMuted || !this.ctx || !this.noiseBuffer) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx || !this.noiseBuffer) return;
         const now = this.ctx.currentTime;
         const vol = Math.max(0.015, Math.min(0.16, proximity * 0.16));
 
@@ -1707,19 +1774,31 @@ class SoundscapeEngine {
         src.start(now, Math.random() * 1.5, 0.16);
     }
 
+    tickPlayerFootstep(dt, moving, isHiding, area) {
+        if (!moving || isHiding || area === 'room304') {
+            this.playerStepTimer = 0.05;
+            return;
+        }
+        this.playerStepTimer -= dt;
+        if (this.playerStepTimer <= 0) {
+            this.playerStepTimer = 0.34;
+            this.playSpatialFootstep(0, 0.26);
+        }
+    }
+
     tickProximityKeroncong(dt, playerX) {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         const dist = Math.abs(playerX - 120);
         if (dist > 260) return;
 
         this.keroncongCooldown -= dt;
         if (this.keroncongCooldown > 0) return;
-        this.keroncongCooldown = 0.65;
+        this.keroncongCooldown = 0.52;
 
-        const vol = (1 - dist / 260) * 0.045;
+        const vol = (1 - dist / 260) * 0.048;
         const pan = Math.max(-1, Math.min(1, (120 - playerX) / 260));
-        const keroncongNotes = [293.66, 329.63, 349.23, 440.00, 523.25, 440.00, 349.23];
-        const freq = keroncongNotes[Math.floor(Math.random() * keroncongNotes.length)];
+        const freq = KERONCONG_MELODY[this.keroncongStep % KERONCONG_MELODY.length];
+        this.keroncongStep++;
 
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
@@ -1729,21 +1808,21 @@ class SoundscapeEngine {
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, now);
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(750, now);
+        filter.frequency.setValueAtTime(780, now);
 
         gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(vol, now + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.65);
+        gain.gain.linearRampToValueAtTime(vol, now + 0.035);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.56);
 
         osc.connect(filter);
         filter.connect(gain);
         this.connectWithPan(gain, pan);
         osc.start(now);
-        osc.stop(now + 0.68);
+        osc.stop(now + 0.58);
     }
 
     playThunder() {
-        if (!this.isStarted || this.isMuted || !this.ctx || !this.noiseBuffer) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx || !this.noiseBuffer) return;
         const now = this.ctx.currentTime;
         const src = this.ctx.createBufferSource();
         src.buffer = this.noiseBuffer;
@@ -1789,7 +1868,7 @@ class SoundscapeEngine {
 
         this.radioMusicOsc = this.ctx.createOscillator();
         this.radioMusicOsc.type = 'triangle';
-        this.radioMusicOsc.frequency.setValueAtTime(293.66, now);
+        this.radioMusicOsc.frequency.setValueAtTime(KERONCONG_MELODY[0], now);
 
         this.radioMusicGain = this.ctx.createGain();
         this.radioMusicGain.gain.setValueAtTime(0.001, now);
@@ -1797,16 +1876,22 @@ class SoundscapeEngine {
         this.radioMusicOsc.connect(this.radioMusicGain);
         this.radioMusicGain.connect(this.ctx.destination);
         this.radioMusicOsc.start(now);
+        this.radioStep = 0;
+        this.radioNoteTimer = 0;
     }
 
-    updateRadioTuning(clarity) {
+    updateRadioTuning(clarity, dt = 0.016) {
         if (!this.ctx || !this.radioStaticGain || !this.radioMusicGain) return;
         const now = this.ctx.currentTime;
         this.radioStaticGain.gain.setTargetAtTime((1 - clarity * 0.9) * 0.08, now, 0.06);
-        this.radioMusicGain.gain.setTargetAtTime(clarity * 0.06, now, 0.06);
-        if (this.radioMusicOsc && Math.random() < 0.2) {
-            const notes = [293.66, 329.63, 349.23, 440.00];
-            this.radioMusicOsc.frequency.setValueAtTime(notes[Math.floor(Math.random() * notes.length)], now);
+        this.radioMusicGain.gain.setTargetAtTime(clarity * 0.062, now, 0.06);
+
+        this.radioNoteTimer -= dt;
+        if (this.radioMusicOsc && this.radioNoteTimer <= 0) {
+            this.radioNoteTimer = 0.42;
+            const note = KERONCONG_MELODY[this.radioStep % KERONCONG_MELODY.length];
+            this.radioMusicOsc.frequency.setTargetAtTime(note, now, 0.03);
+            this.radioStep++;
         }
     }
 
@@ -1822,7 +1907,7 @@ class SoundscapeEngine {
     }
 
     playSFX(type) {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -1857,6 +1942,13 @@ class SoundscapeEngine {
             gain.gain.setValueAtTime(0.08, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
             dur = 0.26;
+        } else if (type === 'creak') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(340, now);
+            osc.frequency.linearRampToValueAtTime(275, now + 0.28);
+            gain.gain.setValueAtTime(0.03, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+            dur = 0.35;
         } else if (type === 'hide') {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(240, now);
@@ -2112,7 +2204,7 @@ function startRadioTuningGame() {
         const clarity = Math.max(0, 1 - diff / 4.5);
         const inZone = diff <= 0.45;
 
-        audio.updateRadioTuning(clarity);
+        audio.updateRadioTuning(clarity, dt);
 
         if (inZone) {
             lockProgress += dt;
@@ -2170,12 +2262,20 @@ function startFlashlightWiringGame() {
         { id: 'neg', label: '- Ground Biru', color: '#38bdf8' },
         { id: 'led', label: '⚡ Driver LED', color: '#fbbf24' }
     ];
-    // Shuffled right side order
-    const rightOrder = [
+    // Randomized right-side PCB terminal order per session (Fisher-Yates)
+    const rightPool = [
         { id: 'led', label: 'Pin Bohlam LED' },
         { id: 'pos', label: 'Pin Daya (+)' },
         { id: 'neg', label: 'Pin Massa (-)' }
     ];
+    for (let i = rightPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [rightPool[i], rightPool[j]] = [rightPool[j], rightPool[i]];
+    }
+    if (rightPool.every((r, idx) => r.id === wires[idx].id)) {
+        [rightPool[0], rightPool[1]] = [rightPool[1], rightPool[0]];
+    }
+    const rightOrder = rightPool;
 
     let selectedLeft = null;
     const connected = { pos: false, neg: false, led: false };
@@ -2288,9 +2388,17 @@ function startTerrariumCraftGame() {
     let layersDone = { stones: false, soil: false, moss: false };
     let humidity = 30;
     let sensorAttached = false;
-    let testTaps = 0;
+    let resonanceHits = 0;
+    let rhythmFeedback = 'Sentuh tombol saat lingkaran air menyentuh zona hijau!';
+    let animId = null;
+
+    const stopPiezoLoop = () => {
+        if (animId) cancelAnimationFrame(animId);
+        animId = null;
+    };
 
     const render = () => {
+        stopPiezoLoop();
         const layersReady = layersDone.stones && layersDone.soil && layersDone.moss;
         const humIdeal = humidity >= 65 && humidity <= 80;
 
@@ -2332,18 +2440,16 @@ function startTerrariumCraftGame() {
                         ${humIdeal ? 'Lanjut Pasang Sensor Hujan →' : 'Sesuaikan ke 65% – 80% dulu'}
                     </button>
                 ` : `
-                    <p class="m-desc">Langkah 3: Pasang sensor getar piezo di tutup gabus agar Sora dapat <strong>melihat detak hujan lewat cahaya</strong>.</p>
+                    <p class="m-desc">Langkah 3: Kalibrasi sensor piezo agar Sora bisa <strong>melihat detak rintik hujan lewat pendar cahaya</strong>.</p>
                     <div class="m-card" style="text-align:center;">
-                        <div style="font-size:44px; margin-bottom:6px; filter:${testTaps > 0 ? 'drop-shadow(0 0 18px #34d399)' : 'none'};">
-                            ${sensorAttached ? '✨🫙✨' : '🫙'}
-                        </div>
                         ${!sensorAttached ? `
+                            <div style="font-size:44px; margin-bottom:10px;">🫙</div>
                             <button id="btn-attach-piezo" class="m-btn amber">⚡ Solder Sensor Piezo & LED Hangat</button>
                         ` : `
-                            <p style="font-size:13px; color:#a7f3d0; margin:0 0 10px;">
-                                Sensor aktif! Ketuk kaca 2 kali untuk menguji pendaran cahaya hujan (${testTaps}/2).
-                            </p>
-                            <button id="btn-test-tap" class="m-btn emerald">💧 Ketuk Kaca (Uji Getaran Hujan)</button>
+                            <canvas id="piezo-rhythm-canvas" width="240" height="128" style="width:100%; max-width:240px; height:128px; margin:0 auto 10px; display:block; background:#030712; border-radius:12px; border:1px solid #1e293b;"></canvas>
+                            <div class="font-mono-tech" style="font-size:12px; color:#6ee7b7; margin-bottom:6px;">Resonansi Terkalibrasi: ${resonanceHits} / 3</div>
+                            <p id="piezo-feedback" style="font-size:12.5px; color:#fde68a; margin:0 0 10px;">${rhythmFeedback}</p>
+                            <button id="btn-test-tap" class="m-btn emerald">💧 Ketuk Kaca Saat Cincin Hijau</button>
                         `}
                     </div>
                 `}
@@ -2383,13 +2489,74 @@ function startTerrariumCraftGame() {
                     render();
                 });
             } else {
+                const pCanvas = document.getElementById('piezo-rhythm-canvas');
+                const pCtx = pCanvas ? pCanvas.getContext('2d') : null;
+                let phase = 0.35; // start near sweet spot so first beat feels responsive
+                let lastT = performance.now();
+
+                const isInSweetSpot = () => {
+                    const ringR = 54 - (phase % 1) * 46;
+                    return ringR >= 16 && ringR <= 38;
+                };
+
+                const tickRhythm = (now) => {
+                    if (!gameState.modalOpen || step !== 3 || !sensorAttached) {
+                        stopPiezoLoop();
+                        return;
+                    }
+                    const dt = Math.min(0.05, (now - lastT) / 1000);
+                    lastT = now;
+                    phase = (phase + dt * 0.68) % 1;
+
+                    if (pCtx) {
+                        const w = pCanvas.width;
+                        const h = pCanvas.height;
+                        pCtx.clearRect(0, 0, w, h);
+
+                        // Target emerald zone (r = 18..36)
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, 27, 0, Math.PI * 2);
+                        pCtx.strokeStyle = 'rgba(16, 185, 129, 0.32)';
+                        pCtx.lineWidth = 14;
+                        pCtx.stroke();
+
+                        // Glowing center moss LED core
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, 8 + resonanceHits * 2, 0, Math.PI * 2);
+                        pCtx.fillStyle = isInSweetSpot() ? '#34d399' : '#10b981';
+                        pCtx.fill();
+
+                        // Converging raindrop ripple
+                        const r = 54 - phase * 46;
+                        const inZone = isInSweetSpot();
+                        pCtx.beginPath();
+                        pCtx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+                        pCtx.strokeStyle = inZone ? '#fde68a' : '#38bdf8';
+                        pCtx.lineWidth = inZone ? 3.5 : 2;
+                        pCtx.stroke();
+                    }
+                    animId = requestAnimationFrame(tickRhythm);
+                };
+
+                activeMiniGameCleanup = stopPiezoLoop;
+                animId = requestAnimationFrame(tickRhythm);
+
                 document.getElementById('btn-test-tap').addEventListener('click', () => {
-                    audio.playSFX('chime');
-                    testTaps++;
-                    if (testTaps >= 2) {
-                        completeRepairCraft('itemSora', 'Terarium Lentera Kecil (305)', 'Sekarang antar diam-diam ke keset Pintu 305 untuk Sora.');
+                    if (isInSweetSpot()) {
+                        audio.playSFX('chime');
+                        resonanceHits++;
+                        rhythmFeedback = '✨ Resonansi akurat! Lentera memantulkan cahaya hijau hangat.';
+                        if (resonanceHits >= 3) {
+                            stopPiezoLoop();
+                            completeRepairCraft('itemSora', 'Terarium Lentera Kecil (305)', 'Sekarang antar diam-diam ke keset Pintu 305 untuk Sora.');
+                        } else {
+                            render();
+                        }
                     } else {
-                        render();
+                        audio.playSFX('water');
+                        rhythmFeedback = 'Sedikit meleset—tunggu cincin air biru menyala emas di zona hijau!';
+                        const fb = document.getElementById('piezo-feedback');
+                        if (fb) fb.textContent = rhythmFeedback;
                     }
                 });
             }
@@ -2646,55 +2813,61 @@ function drawRoom304(ctx) {
     drawJar(350, 306, 32, 58);
     drawJar(392, 324, 24, 40);
 
-    // 3. Workbench (x=565)
+    // 3. Workbench (x=545)
     ctx.fillStyle = '#2d231e';
-    ctx.fillRect(495, 365, 140, 95);
+    ctx.fillRect(476, 365, 128, 95);
     ctx.fillStyle = '#334155';
-    ctx.fillRect(510, 332, 46, 33);
+    ctx.fillRect(492, 332, 46, 33);
     ctx.fillStyle = '#38bdf8';
-    ctx.fillRect(516, 338, 34, 18);
+    ctx.fillRect(498, 338, 34, 18);
 
     // Desk lamp
     ctx.strokeStyle = '#a8a29e';
     ctx.beginPath();
-    ctx.moveTo(610, 365);
-    ctx.lineTo(620, 320);
-    ctx.lineTo(590, 312);
+    ctx.moveTo(584, 365);
+    ctx.lineTo(592, 320);
+    ctx.lineTo(564, 312);
     ctx.stroke();
 
-    const workGlow = ctx.createRadialGradient(575, 340, 5, 575, 340, 92);
+    const workGlow = ctx.createRadialGradient(545, 340, 5, 545, 340, 88);
     workGlow.addColorStop(0, 'rgba(251, 191, 36, 0.28)');
     workGlow.addColorStop(1, 'rgba(251, 191, 36, 0)');
     ctx.fillStyle = workGlow;
     ctx.beginPath();
-    ctx.arc(575, 340, 92, 0, Math.PI * 2);
+    ctx.arc(545, 340, 88, 0, Math.PI * 2);
     ctx.fill();
 
-    // Silent Reply Collectibles displayed on Workbench / Shelf!
+    // 3b. Sudut Kenangan / Keepsake Side Table & Wall Shelf (x=635)
+    ctx.fillStyle = '#382a22';
+    ctx.fillRect(612, 385, 54, 75);
+    ctx.strokeStyle = '#574134';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(612, 385, 54, 75);
+
     if (gameState.repliesCollected.ratna) {
         // Plate with green/white Kue Putu
         ctx.fillStyle = '#e2e8f0';
-        ctx.fillRect(566, 359, 26, 5);
+        ctx.fillRect(617, 380, 24, 5);
         ctx.fillStyle = '#10b981';
-        ctx.fillRect(570, 351, 8, 8);
-        ctx.fillRect(580, 351, 8, 8);
+        ctx.fillRect(620, 372, 7, 8);
+        ctx.fillRect(630, 372, 7, 8);
     }
     if (gameState.repliesCollected.damar) {
         // Ginger coffee thermos
         ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(618, 336, 12, 29);
+        ctx.fillRect(647, 357, 12, 28);
         ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(618, 332, 12, 5);
+        ctx.fillRect(647, 353, 12, 5);
     }
     if (gameState.repliesCollected.sora) {
-        // Small framed painting on wall above workbench
+        // Small framed painting on wall above keepsake corner
         ctx.fillStyle = '#78350f';
-        ctx.fillRect(540, 265, 48, 38);
+        ctx.fillRect(615, 290, 48, 38);
         ctx.fillStyle = '#fef3c7';
-        ctx.fillRect(544, 269, 40, 30);
+        ctx.fillRect(619, 294, 40, 30);
         ctx.fillStyle = '#f59e0b';
         ctx.beginPath();
-        ctx.arc(564, 282, 9, Math.PI, 0);
+        ctx.arc(639, 307, 9, Math.PI, 0);
         ctx.fill();
     }
 
@@ -2835,13 +3008,52 @@ function drawHallway(ctx) {
         ctx.fill();
     }
 
-    // Neighbor Doors
+    // Neighbor Doors (with Door Creak Warning / Peek Event!)
+    const dp = gameState.doorPeek;
     const drawCorridorDoor = (dx, num, isRaka, delivered) => {
-        ctx.fillStyle = isRaka ? '#292019' : '#18262d';
+        const isPeekingThisDoor = dp && dp.roomNum === num;
+        const isWarn = isPeekingThisDoor && dp.phase === 'warning';
+        const isOpen = isPeekingThisDoor && dp.phase === 'open';
+
+        ctx.fillStyle = isOpen ? '#fde68a' : (isRaka ? '#292019' : '#18262d');
         ctx.fillRect(dx - 38, 235, 76, 225);
-        ctx.strokeStyle = isRaka ? '#b45309' : (delivered ? '#10b981' : '#334155');
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = isWarn ? '#fbbf24' : (isOpen ? '#f43f5e' : (isRaka ? '#b45309' : (delivered ? '#10b981' : '#334155')));
+        ctx.lineWidth = isPeekingThisDoor ? 3.5 : 2.5;
         ctx.strokeRect(dx - 38, 235, 76, 225);
+
+        // Vibrating handle during warning
+        if (isWarn) {
+            const shakeY = Math.sin(now * 0.06) * 2.5;
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(dx + 22, 344 + shakeY, 10, 5);
+            ctx.font = '700 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('⚠️ Gagang Berderit', dx, 224);
+        }
+
+        // Light cone spilling into hallway when door cracks open
+        if (isOpen) {
+            const cone = ctx.createRadialGradient(dx, 370, 12, dx, 420, 125);
+            cone.addColorStop(0, 'rgba(253, 224, 71, 0.42)');
+            cone.addColorStop(1, 'rgba(253, 224, 71, 0)');
+            ctx.fillStyle = cone;
+            ctx.beginPath();
+            ctx.moveTo(dx - 15, 240);
+            ctx.lineTo(dx - 115, 465);
+            ctx.lineTo(dx + 115, 465);
+            ctx.lineTo(dx + 15, 240);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(dx, 330, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fb7185';
+            ctx.font = '700 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('👁️ Mengintip! (Sembunyi!)', dx, 224);
+        }
 
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(dx - 20, 258, 40, 18);
@@ -2897,18 +3109,32 @@ function drawHallway(ctx) {
     ctx.strokeRect(664, 210, 48, 250);
     drawCoverLabel(ctx, 688, 200);
 
-    // Hallway Trash / Discarded Items Box (x=460)
+    // Hallway Fixed Trash Bin (x=460) + Dynamic Per-Night Dropped Prop (conf.trashX)
     ctx.fillStyle = '#1e293b';
     ctx.fillRect(435, 395, 50, 65);
     ctx.strokeStyle = '#475569';
     ctx.strokeRect(435, 395, 50, 65);
 
     const nightConf = NIGHT_DATA[gameState.night];
-    if (nightConf && gameState.clues[nightConf.neighborKey] && !gameState.inventory[nightConf.inventoryKey]) {
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(460, 384 + Math.sin(now * 0.006) * 4, 4.5, 0, Math.PI * 2);
-        ctx.fill();
+    if (nightConf) {
+        const tx = nightConf.trashX;
+        if (gameState.night === 2) {
+            // Dropped metal clip & flashlight near right stairwell
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(tx - 10, 449, 20, 9);
+        } else if (gameState.night === 3) {
+            // Fallen jar & torn paper near west hallway
+            ctx.fillStyle = 'rgba(167, 243, 208, 0.35)';
+            ctx.fillRect(tx - 8, 444, 16, 15);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(tx + 10, 452, 10, 6);
+        }
+        if (gameState.clues[nightConf.neighborKey] && !gameState.inventory[nightConf.inventoryKey]) {
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(tx, 384 + Math.sin(now * 0.006) * 4, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 
     // Emergency Stairs to Rooftop (x=915)
@@ -2923,12 +3149,13 @@ function drawHallway(ctx) {
         ctx.fillRect(882 + s * 8, 440 - s * 28, 60 - s * 8, 10);
     }
 
-    // Patrol NPC Shadow Silhouette
+    // Patrol NPC Shadow Silhouette (Noise-aware Detection Aura)
     const npc = gameState.hallwayNPC;
+    const isMovingUpright = !gameState.isHiding && (gameState.moveLeft || gameState.moveRight || gameState.targetX !== null);
     ctx.save();
-    const auraRadius = gameState.isHiding ? 75 : 125;
+    const auraRadius = gameState.isHiding ? 72 : (isMovingUpright ? 155 : 125);
     const auraGrad = ctx.createRadialGradient(npc.x, 390, 10, npc.x, 390, auraRadius);
-    auraGrad.addColorStop(0, 'rgba(244, 63, 94, 0.28)');
+    auraGrad.addColorStop(0, isMovingUpright ? 'rgba(244, 63, 94, 0.34)' : 'rgba(244, 63, 94, 0.25)');
     auraGrad.addColorStop(1, 'rgba(244, 63, 94, 0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
@@ -3243,6 +3470,19 @@ function drawRaka(ctx, x, floorY) {
     ctx.arc(x + panicShiver, floorY - 112 + bob + crouchOffset, 15.5, isHiding ? Math.PI * 0.7 : Math.PI * 0.85, isHiding ? Math.PI * 2.3 : Math.PI * 2.15);
     ctx.fill();
 
+    // Carrying Crafted Gift Parcel Indicator
+    const conf = NIGHT_DATA[gameState.night];
+    const carryingGift = conf && gameState.crafted[conf.craftedKey] && !gameState.delivered[conf.neighborKey];
+    if (carryingGift) {
+        const pkgX = x + gameState.facing * 20;
+        const pkgY = floorY - 62 + bob + crouchOffset;
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(pkgX - 5, pkgY - 5, 10, 10);
+        ctx.strokeStyle = '#fde68a';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(pkgX - 5, pkgY - 5, 10, 10);
+    }
+
     ctx.restore();
 }
 
@@ -3355,6 +3595,9 @@ function createInitialState(unlockedEndings = { avoidant: false, lanterns: false
             stepAudioTimer: 0,
             flippedThisPass: false
         },
+        doorPeek: null,
+        doorPeekCooldown: 8,
+        revisitBonusGiven: {},
 
         cutscene: null,
         activeHotspot: null,
@@ -3383,7 +3626,8 @@ function saveGameProgress() {
             repliesCollected: gameState.repliesCollected,
             pendingGift: gameState.pendingGift,
             journalNotes: gameState.journalNotes,
-            unlockedEndings: gameState.unlockedEndings
+            unlockedEndings: gameState.unlockedEndings,
+            revisitBonusGiven: gameState.revisitBonusGiven
         };
         localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
     } catch (_) {}
@@ -3411,7 +3655,8 @@ function loadGameProgress() {
             delivered: { ...base.delivered, ...(data.delivered || {}) },
             repliesCollected: { ...base.repliesCollected, ...(data.repliesCollected || {}) },
             pendingGift: data.pendingGift || null,
-            journalNotes: Array.isArray(data.journalNotes) ? data.journalNotes : []
+            journalNotes: Array.isArray(data.journalNotes) ? data.journalNotes : [],
+            revisitBonusGiven: data.revisitBonusGiven && typeof data.revisitBonusGiven === 'object' ? data.revisitBonusGiven : {}
         });
         gameState = base;
         return true;
@@ -3430,7 +3675,26 @@ function hasProgressBeyondStart() {
 function getVisibleHotspotsForArea(area) {
     const base = HOTSPOTS[area] || [];
     if (area === 'room304') {
-        return base.filter(h => h.id !== 'door_gift' || Boolean(gameState.pendingGift));
+        const hasAnyReply = gameState.repliesCollected.ratna || gameState.repliesCollected.damar || gameState.repliesCollected.sora;
+        return base.filter(h => {
+            if (h.id === 'door_gift') return Boolean(gameState.pendingGift);
+            if (h.id === 'keepsakes') return hasAnyReply;
+            return true;
+        });
+    }
+    if (area === 'hallway') {
+        const conf = NIGHT_DATA[gameState.night];
+        return base.map(h => {
+            if (h.id === 'trash_bin' && conf) {
+                return {
+                    ...h,
+                    x: conf.trashX,
+                    shortTitle: conf.trashShortTitle,
+                    label: conf.trashLabel
+                };
+            }
+            return h;
+        });
     }
     return base;
 }
@@ -3473,7 +3737,7 @@ function getCurrentQuestInfo() {
         return { step: `Malam ${conf.number} • 1/4`, text: `Cek Ventilasi untuk mendengar kabar ${conf.neighborName} (${conf.roomNum}).` };
     }
     if (!invDone) {
-        return { step: `Malam ${conf.number} • 2/4`, text: `Ambil barang rusak di Kotak Rongsokan Lorong.` };
+        return { step: `Malam ${conf.number} • 2/4`, text: `Ambil barang rusak di ${conf.trashShortTitle} Lorong.` };
     }
     if (!craftDone) {
         return { step: `Malam ${conf.number} • 3/4`, text: `Perbaiki ${conf.itemTitle} di Meja Kerja Kamar 304.` };
@@ -3493,7 +3757,7 @@ function updateHUD() {
     gameState.resilience = Math.max(0, Math.min(gameState.maxResilience, gameState.resilience));
     gameState.sensoryLoad = Math.max(0, Math.min(100, gameState.sensoryLoad));
 
-    const resVal = Math.round(gameState.resilience);
+    const resVal = Math.floor(gameState.resilience);
     const maxVal = Math.round(gameState.maxResilience);
     const senVal = Math.round(gameState.sensoryLoad);
 
@@ -3569,6 +3833,8 @@ function switchArea(newArea, spawnX) {
     gameState.playerX = spawnX;
     gameState.targetX = null;
     gameState.isHiding = false;
+    gameState.doorPeek = null;
+    gameState.doorPeekCooldown = Math.max(5.5, gameState.doorPeekCooldown || 8);
 
     const body = document.body;
     const areaIcon = document.getElementById('area-icon');
@@ -3608,7 +3874,7 @@ function switchArea(newArea, spawnX) {
         areaTitle.textContent = `Lorong Lt.3`;
         areaSub.textContent = `Malam ${gameState.night} • Hati-hati`;
         setMonologue(
-            'Lorong terasa dingin dan lembap. Gunakan Spot Sembunyi atau tombol Sembunyi [S] saat tetangga lewat.',
+            'Lorong terasa dingin dan lembap. Hati-hati jika gagang pintu berderit [S].',
             'Tekan [SPASI] untuk Tarik Napas jika cemas naik.'
         );
     } else if (newArea === 'rooftop') {
@@ -3724,6 +3990,8 @@ function interactCurrentHotspot() {
         openObservationModal();
     } else if (h.id === 'workbench') {
         openWorkbenchModal();
+    } else if (h.id === 'keepsakes') {
+        openKeepsakesModal();
     } else if (h.id === 'door_gift') {
         openSilentReplyModal();
     } else if (h.id === 'door_out') {
@@ -3807,8 +4075,8 @@ function openObservationModal() {
             gameState.resilience = Math.max(5, gameState.resilience - 5);
             gameState.clues[conf.neighborKey] = true;
             saveGameProgress();
-            showToast(`Kabar ${conf.neighborName} dicatat! Cek Kotak Rongsokan di lorong.`, '👂');
-            setMonologue(conf.ventSummary, 'Keluar ke Lorong Lantai 3 dan periksa Kotak Rongsokan.');
+            showToast(`Kabar ${conf.neighborName} dicatat! Periksa ${conf.trashShortTitle} di lorong.`, '👂');
+            setMonologue(conf.ventSummary, `Keluar ke Lorong Lantai 3 dan periksa ${conf.trashShortTitle}.`);
             openObservationModal();
             updateHUD();
         });
@@ -3823,7 +4091,7 @@ function openTrashScavengeModal() {
 
     openModal(`
         <div>
-            <span class="m-kicker amber">Malam ${conf.number} • Kotak Rongsokan Lorong</span>
+            <span class="m-kicker amber">Malam ${conf.number} • ${conf.trashShortTitle} Lorong</span>
             <h2 class="m-title">Barang Bekas & Terbuang</h2>
 
             ${!hasObserved ? `
@@ -3899,15 +4167,69 @@ function openWorkbenchModal() {
     }
 }
 
-// --- SILENT DELIVERY AT NEIGHBOR DOOR (STEP 4 PER NIGHT) ---
+// --- SUDUT KENANGAN MODAL (INSPECTABLE KEEPSAKES IN ROOM 304) ---
+function openKeepsakesModal() {
+    const keys = ['ratna', 'damar', 'sora'];
+    const unlockedCount = keys.filter(k => gameState.repliesCollected[k]).length;
+
+    openModal(`
+        <div>
+            <span class="m-kicker ${gameState.isDawn ? 'amber' : 'emerald'}">
+                ${gameState.isDawn ? 'Pagi di Kamar 304 • Kenangan Hangat' : `Sudut Kenangan Kamar 304 (${unlockedCount}/3)`}
+            </span>
+            <h2 class="m-title">Benda-Benda Balasan Sunyi</h2>
+            <p class="m-desc">
+                Setiap bingkisan kecil dari tetanggamu tersimpan rapi di sudut meja ini—pengingat bahwa kamarmu tak lagi benar-benar terisolasi.
+            </p>
+
+            ${keys.map(k => {
+                const item = KEEPSAKE_REFLECTIONS[k];
+                const collected = Boolean(gameState.repliesCollected[k]);
+                return `
+                    <div class="m-card ${collected ? 'done' : ''}">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+                            <span style="font-size:22px;">${collected ? item.icon : '❔'}</span>
+                            <strong style="font-size:14.5px; color:${collected ? '#fff' : '#64748b'};">
+                                ${collected ? item.title : 'Bingkisan Belum Diterima'}
+                            </strong>
+                        </div>
+                        <p style="margin:0; font-size:13px; color:${collected ? '#d1fae5' : '#64748b'}; font-style:${collected ? 'italic' : 'normal'};">
+                            ${collected ? `"${item.dawnText}"` : 'Bantu tetangga di lorong dan temukan balasannya di keset pintu 304.'}
+                        </p>
+                    </div>
+                `;
+            }).join('')}
+
+            <button onclick="closeModal()" class="m-btn secondary">Tutup</button>
+        </div>
+    `);
+}
+
+// --- SILENT DELIVERY AT NEIGHBOR DOOR (STEP 4 PER NIGHT + REACTIVE REVISITS) ---
 function handleNeighborDoorInteraction(whoKey, roomNum, name, itemKey, itemName) {
     if (gameState.delivered[whoKey]) {
+        const revisitText = DOOR_REVISIT_DATA[whoKey] && DOOR_REVISIT_DATA[whoKey][gameState.night];
+        if (revisitText) {
+            const bonusKey = `${whoKey}_n${gameState.night}`;
+            if (!gameState.revisitBonusGiven[bonusKey]) {
+                gameState.revisitBonusGiven[bonusKey] = true;
+                gameState.resilience = Math.min(gameState.maxResilience, gameState.resilience + 5);
+                audio.playSFX('chime');
+                saveGameProgress();
+                updateHUD();
+                showToast(`Mengintip kabar Kamar ${roomNum} menenangkan hatimu (+5 Mental)`, '💛');
+            } else {
+                showToast(`Kamar ${roomNum} (${name}) tampak tenang malam ini.`, '🕊️');
+            }
+            setMonologue(revisitText, `Kabar hangat dari Kamar ${roomNum} (${name}).`);
+            return;
+        }
         showToast(`Kamar ${roomNum} (${name}) sudah menerima bantuanmu.`, '✓');
         return;
     }
     if (!gameState.crafted[itemKey]) {
         showToast(`Perbaiki ${itemName} di Meja Kerja Kamar 304 terlebih dahulu!`, '⚠️');
-        setMonologue(`Aku belum membawa ${itemName} untuk ${name}.`, 'Periksa Ventilasi, Kotak Rongsokan, lalu Meja Kerja.');
+        setMonologue(`Aku belum membawa ${itemName} untuk ${name}.`, 'Periksa Ventilasi, barang di lorong, lalu Meja Kerja.');
         return;
     }
 
@@ -4017,6 +4339,11 @@ function advanceToNight(nextNight) {
 
 // --- ROOFTOP CLIMAX & VISUAL CUTSCENE ENGINE ---
 function openClimaxRooftopModal() {
+    const resNow = Math.floor(gameState.resilience);
+    const canLanterns = gameState.resilience >= 30;
+    const hasPriorReplies = Boolean(gameState.repliesCollected.ratna && gameState.repliesCollected.damar);
+    const canTrueEnding = gameState.resilience >= 50 && hasPriorReplies;
+
     openModal(`
         <div>
             <span class="m-kicker rose">Babak Penentuan • Atap Gedung</span>
@@ -4027,25 +4354,29 @@ function openClimaxRooftopModal() {
             </p>
 
             <button onclick="startEndingCutscene('avoidant')" class="choice-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px;">Pilihan A: Beri Sinyal ke Tangga & Panggil Damar</strong>
-                    <span class="pill-badge warn">Tetap Tersembunyi</span>
+                    <span class="pill-badge warn" style="flex-shrink:0;">Tetap Tersembunyi</span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#cbd5e1;">Sorotkan sinyal senter ke bawah memanggil Damar, lalu mundur ke bayangan tangga sebelum terlihat.</p>
             </button>
 
             <button onclick="startEndingCutscene('lanterns')" class="choice-card emerald-border">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px; color:#6ee7b7;">Pilihan B: Susun Jalur Lentera Lumut</strong>
-                    <span class="pill-badge">Butuh 30 Mental</span>
+                    <span class="pill-badge ${canLanterns ? '' : 'danger'}" style="flex-shrink:0;">
+                        ${canLanterns ? '✓ Mental ≥ 30' : `Butuh 30 Mental (${resNow})`}
+                    </span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#cbd5e1;">Letakkan deretan lentera lumut di lantai basah sebagai jejak visual agar Sora menoleh dan menjauh dari tepian.</p>
             </button>
 
             <button onclick="startEndingCutscene('threshold')" class="choice-card gold-border">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px; color:#fde68a;">Pilihan C: Melangkah, Buka Payung & Duduk Bersama</strong>
-                    <span class="pill-badge" style="background:#f59e0b; color:#090b0e; border-color:#fbbf24;">Ending Sejati</span>
+                    <span class="pill-badge ${canTrueEnding ? '' : 'danger'}" style="flex-shrink:0; ${canTrueEnding ? 'background:#f59e0b; color:#090b0e; border-color:#fbbf24;' : ''}">
+                        ${canTrueEnding ? '✓ Ending Sejati' : `Butuh 50 Mental (${resNow})`}
+                    </span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#fef3c7;">Lawan ketakutan terbesarmu. Berjalanlah ke sampingnya, buka payung, dan temani dalam diam hingga fajar tiba.</p>
             </button>
@@ -4057,6 +4388,16 @@ window.startEndingCutscene = function(type) {
     if (type === 'lanterns' && gameState.resilience < 30) {
         showToast('Butuh minimal 30 Mental untuk Pilihan B! Rawat lumut/sup di Kamar 304 dulu.', '⚠️');
         return;
+    }
+    if (type === 'threshold') {
+        if (!gameState.repliesCollected.ratna || !gameState.repliesCollected.damar) {
+            showToast('Kumpulkan Balasan Sunyi Malam 1 & 2 terlebih dahulu untuk membuka Ending Sejati.', '💌');
+            return;
+        }
+        if (gameState.resilience < 50) {
+            showToast('Butuh minimal 50 Mental untuk Pilihan C! Turun sebentar ke Kamar 304 untuk menyeduh sup atau merawat lumut.', '⚠️');
+            return;
+        }
     }
 
     closeModal();
@@ -4390,6 +4731,7 @@ function updateSimulation(dt) {
     }
     gameState.playerX = Math.max(85, Math.min(935, gameState.playerX));
     if (moving) gameState.walkPhase += dt * (gameState.isHiding ? 6 : 11);
+    audio.tickPlayerFootstep(dt, moving, gameState.isHiding, gameState.area);
 
     // Self-care gradual neglect decay
     if (!gameState.isDawn) {
@@ -4410,12 +4752,14 @@ function updateSimulation(dt) {
         }
     } else if (gameState.area === 'hallway') {
         const inCover = gameState.isHiding && COVER_SPOTS.some(c => Math.abs(gameState.playerX - c.x) < 48);
+        const movingUpright = moving && !gameState.isHiding;
 
-        // Ambient anxiety load
+        // Ambient anxiety load + Sprint Noise Stress when walking openly without sneaking
         if (gameState.groundingAuraTimer <= 0 && !inCover) {
-            const nightRate = gameState.night === 3 ? 3.0 : (gameState.night === 2 ? 2.4 : 1.9);
-            const hideFactor = gameState.isHiding ? 0.35 : 1.0;
-            gameState.sensoryLoad += nightRate * hideFactor * dt;
+            const nightRate = gameState.night === 3 ? 3.2 : (gameState.night === 2 ? 2.6 : 2.1);
+            const hideFactor = gameState.isHiding ? 0.32 : 1.0;
+            const noiseExtra = movingUpright ? 1.5 : 0;
+            gameState.sensoryLoad += (nightRate * hideFactor + noiseExtra) * dt;
         }
 
         // Soothing distant keroncong near Door 301 once delivered
@@ -4423,6 +4767,53 @@ function updateSimulation(dt) {
             audio.tickProximityKeroncong(dt, gameState.playerX);
             if (Math.abs(gameState.playerX - 120) < 90) {
                 gameState.sensoryLoad = Math.max(0, gameState.sensoryLoad - 1.4 * dt);
+            }
+        }
+
+        // Door Creak Warning & Neighbor Peek Hazard ("Gagang Pintu Berderit")
+        if (!gameState.isDawn) {
+            if (!gameState.doorPeek) {
+                gameState.doorPeekCooldown -= dt;
+                if (gameState.doorPeekCooldown <= 0) {
+                    const doors = [
+                        { roomNum: '301', x: 120 },
+                        { roomNum: '302', x: 300 },
+                        { roomNum: '305', x: 770 }
+                    ];
+                    const pick = doors[Math.floor(Math.random() * doors.length)];
+                    audio.playSFX('creak');
+                    gameState.doorPeek = {
+                        roomNum: pick.roomNum,
+                        x: pick.x,
+                        phase: 'warning',
+                        timer: 1.9,
+                        hitApplied: false
+                    };
+                }
+            } else {
+                const dp = gameState.doorPeek;
+                dp.timer -= dt;
+                if (dp.phase === 'warning' && dp.timer <= 0) {
+                    dp.phase = 'open';
+                    dp.timer = 2.1;
+                    audio.playSFX('door');
+                } else if (dp.phase === 'open') {
+                    const inBeam = Math.abs(gameState.playerX - dp.x) < 108;
+                    if (!dp.hitApplied && inBeam) {
+                        dp.hitApplied = true;
+                        if (!inCover && !gameState.isHiding && gameState.groundingAuraTimer <= 0) {
+                            gameState.sensoryLoad = Math.min(100, gameState.sensoryLoad + 22);
+                            audio.playSFX('panic');
+                            showToast(`Pintu ${dp.roomNum} terbuka! Merunduk [S] atau cari Spot Sembunyi!`, '👁️');
+                        } else {
+                            showToast(`Nyaris terlihat dari Pintu ${dp.roomNum}! Aman karena mengendap.`, '🙈');
+                        }
+                    }
+                    if (dp.timer <= 0) {
+                        gameState.doorPeek = null;
+                        gameState.doorPeekCooldown = gameState.night === 3 ? (8.5 + Math.random() * 4) : (10.5 + Math.random() * 5);
+                    }
+                }
             }
         }
 
@@ -4456,11 +4847,11 @@ function updateSimulation(dt) {
             }
         }
 
-        // Proximity Anxiety Spike
+        // Proximity Anxiety Spike (Moving upright makes bigger noise detection radius!)
         const distToNPC = Math.abs(gameState.playerX - npc.x);
-        const detectionRange = inCover ? 0 : (gameState.isHiding ? 75 : 125);
+        const detectionRange = inCover ? 0 : (gameState.isHiding ? 72 : (movingUpright ? 155 : 125));
         if (distToNPC < detectionRange && gameState.groundingAuraTimer <= 0) {
-            const penalty = (detectionRange - distToNPC) * (gameState.isHiding ? 0.14 : 0.36);
+            const penalty = (detectionRange - distToNPC) * (gameState.isHiding ? 0.14 : 0.38);
             gameState.sensoryLoad += penalty * dt;
         }
 
@@ -4499,7 +4890,41 @@ function updateSimulation(dt) {
     updateHUD();
 }
 
-// --- INPUT LISTENERS ---
+// --- INPUT LISTENERS & MOBILE LIFECYCLE SAFETY ---
+const clearMovementFlags = () => {
+    gameState.moveLeft = false;
+    gameState.moveRight = false;
+};
+window.addEventListener('blur', clearMovementFlags);
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearMovementFlags();
+});
+
+// Capacitor Android Hardware Back Button Handling
+if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+    window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
+        if (gameState.modalOpen) {
+            closeModal();
+            return;
+        }
+        if (gameState.area === 'rooftop' && !(gameState.cutscene && gameState.cutscene.active)) {
+            switchArea('hallway', 895);
+            return;
+        }
+        if (gameState.area === 'hallway') {
+            showToast('Kembali masuk ke Pintu 304 untuk menutup game atau membuka Jurnal.', '🏠');
+            return;
+        }
+        const titleEl = document.getElementById('title-screen');
+        if (titleEl && titleEl.classList.contains('hidden')) {
+            openJournalModal('mission');
+            return;
+        }
+        if (canGoBack) window.history.back();
+        else window.Capacitor.Plugins.App.exitApp();
+    });
+}
+
 window.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
         gameState.moveLeft = true;

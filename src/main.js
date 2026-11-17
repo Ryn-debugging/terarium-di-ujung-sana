@@ -66,6 +66,9 @@ function createInitialState(unlockedEndings = { avoidant: false, lanterns: false
             stepAudioTimer: 0,
             flippedThisPass: false
         },
+        doorPeek: null,
+        doorPeekCooldown: 8,
+        revisitBonusGiven: {},
 
         cutscene: null,
         activeHotspot: null,
@@ -94,7 +97,8 @@ function saveGameProgress() {
             repliesCollected: gameState.repliesCollected,
             pendingGift: gameState.pendingGift,
             journalNotes: gameState.journalNotes,
-            unlockedEndings: gameState.unlockedEndings
+            unlockedEndings: gameState.unlockedEndings,
+            revisitBonusGiven: gameState.revisitBonusGiven
         };
         localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
     } catch (_) {}
@@ -122,7 +126,8 @@ function loadGameProgress() {
             delivered: { ...base.delivered, ...(data.delivered || {}) },
             repliesCollected: { ...base.repliesCollected, ...(data.repliesCollected || {}) },
             pendingGift: data.pendingGift || null,
-            journalNotes: Array.isArray(data.journalNotes) ? data.journalNotes : []
+            journalNotes: Array.isArray(data.journalNotes) ? data.journalNotes : [],
+            revisitBonusGiven: data.revisitBonusGiven && typeof data.revisitBonusGiven === 'object' ? data.revisitBonusGiven : {}
         });
         gameState = base;
         return true;
@@ -141,7 +146,26 @@ function hasProgressBeyondStart() {
 function getVisibleHotspotsForArea(area) {
     const base = HOTSPOTS[area] || [];
     if (area === 'room304') {
-        return base.filter(h => h.id !== 'door_gift' || Boolean(gameState.pendingGift));
+        const hasAnyReply = gameState.repliesCollected.ratna || gameState.repliesCollected.damar || gameState.repliesCollected.sora;
+        return base.filter(h => {
+            if (h.id === 'door_gift') return Boolean(gameState.pendingGift);
+            if (h.id === 'keepsakes') return hasAnyReply;
+            return true;
+        });
+    }
+    if (area === 'hallway') {
+        const conf = NIGHT_DATA[gameState.night];
+        return base.map(h => {
+            if (h.id === 'trash_bin' && conf) {
+                return {
+                    ...h,
+                    x: conf.trashX,
+                    shortTitle: conf.trashShortTitle,
+                    label: conf.trashLabel
+                };
+            }
+            return h;
+        });
     }
     return base;
 }
@@ -184,7 +208,7 @@ function getCurrentQuestInfo() {
         return { step: `Malam ${conf.number} • 1/4`, text: `Cek Ventilasi untuk mendengar kabar ${conf.neighborName} (${conf.roomNum}).` };
     }
     if (!invDone) {
-        return { step: `Malam ${conf.number} • 2/4`, text: `Ambil barang rusak di Kotak Rongsokan Lorong.` };
+        return { step: `Malam ${conf.number} • 2/4`, text: `Ambil barang rusak di ${conf.trashShortTitle} Lorong.` };
     }
     if (!craftDone) {
         return { step: `Malam ${conf.number} • 3/4`, text: `Perbaiki ${conf.itemTitle} di Meja Kerja Kamar 304.` };
@@ -204,7 +228,7 @@ function updateHUD() {
     gameState.resilience = Math.max(0, Math.min(gameState.maxResilience, gameState.resilience));
     gameState.sensoryLoad = Math.max(0, Math.min(100, gameState.sensoryLoad));
 
-    const resVal = Math.round(gameState.resilience);
+    const resVal = Math.floor(gameState.resilience);
     const maxVal = Math.round(gameState.maxResilience);
     const senVal = Math.round(gameState.sensoryLoad);
 
@@ -280,6 +304,8 @@ function switchArea(newArea, spawnX) {
     gameState.playerX = spawnX;
     gameState.targetX = null;
     gameState.isHiding = false;
+    gameState.doorPeek = null;
+    gameState.doorPeekCooldown = Math.max(5.5, gameState.doorPeekCooldown || 8);
 
     const body = document.body;
     const areaIcon = document.getElementById('area-icon');
@@ -319,7 +345,7 @@ function switchArea(newArea, spawnX) {
         areaTitle.textContent = `Lorong Lt.3`;
         areaSub.textContent = `Malam ${gameState.night} • Hati-hati`;
         setMonologue(
-            'Lorong terasa dingin dan lembap. Gunakan Spot Sembunyi atau tombol Sembunyi [S] saat tetangga lewat.',
+            'Lorong terasa dingin dan lembap. Hati-hati jika gagang pintu berderit [S].',
             'Tekan [SPASI] untuk Tarik Napas jika cemas naik.'
         );
     } else if (newArea === 'rooftop') {
@@ -435,6 +461,8 @@ function interactCurrentHotspot() {
         openObservationModal();
     } else if (h.id === 'workbench') {
         openWorkbenchModal();
+    } else if (h.id === 'keepsakes') {
+        openKeepsakesModal();
     } else if (h.id === 'door_gift') {
         openSilentReplyModal();
     } else if (h.id === 'door_out') {
@@ -518,8 +546,8 @@ function openObservationModal() {
             gameState.resilience = Math.max(5, gameState.resilience - 5);
             gameState.clues[conf.neighborKey] = true;
             saveGameProgress();
-            showToast(`Kabar ${conf.neighborName} dicatat! Cek Kotak Rongsokan di lorong.`, '👂');
-            setMonologue(conf.ventSummary, 'Keluar ke Lorong Lantai 3 dan periksa Kotak Rongsokan.');
+            showToast(`Kabar ${conf.neighborName} dicatat! Periksa ${conf.trashShortTitle} di lorong.`, '👂');
+            setMonologue(conf.ventSummary, `Keluar ke Lorong Lantai 3 dan periksa ${conf.trashShortTitle}.`);
             openObservationModal();
             updateHUD();
         });
@@ -534,7 +562,7 @@ function openTrashScavengeModal() {
 
     openModal(`
         <div>
-            <span class="m-kicker amber">Malam ${conf.number} • Kotak Rongsokan Lorong</span>
+            <span class="m-kicker amber">Malam ${conf.number} • ${conf.trashShortTitle} Lorong</span>
             <h2 class="m-title">Barang Bekas & Terbuang</h2>
 
             ${!hasObserved ? `
@@ -610,15 +638,69 @@ function openWorkbenchModal() {
     }
 }
 
-// --- SILENT DELIVERY AT NEIGHBOR DOOR (STEP 4 PER NIGHT) ---
+// --- SUDUT KENANGAN MODAL (INSPECTABLE KEEPSAKES IN ROOM 304) ---
+function openKeepsakesModal() {
+    const keys = ['ratna', 'damar', 'sora'];
+    const unlockedCount = keys.filter(k => gameState.repliesCollected[k]).length;
+
+    openModal(`
+        <div>
+            <span class="m-kicker ${gameState.isDawn ? 'amber' : 'emerald'}">
+                ${gameState.isDawn ? 'Pagi di Kamar 304 • Kenangan Hangat' : `Sudut Kenangan Kamar 304 (${unlockedCount}/3)`}
+            </span>
+            <h2 class="m-title">Benda-Benda Balasan Sunyi</h2>
+            <p class="m-desc">
+                Setiap bingkisan kecil dari tetanggamu tersimpan rapi di sudut meja ini—pengingat bahwa kamarmu tak lagi benar-benar terisolasi.
+            </p>
+
+            ${keys.map(k => {
+                const item = KEEPSAKE_REFLECTIONS[k];
+                const collected = Boolean(gameState.repliesCollected[k]);
+                return `
+                    <div class="m-card ${collected ? 'done' : ''}">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+                            <span style="font-size:22px;">${collected ? item.icon : '❔'}</span>
+                            <strong style="font-size:14.5px; color:${collected ? '#fff' : '#64748b'};">
+                                ${collected ? item.title : 'Bingkisan Belum Diterima'}
+                            </strong>
+                        </div>
+                        <p style="margin:0; font-size:13px; color:${collected ? '#d1fae5' : '#64748b'}; font-style:${collected ? 'italic' : 'normal'};">
+                            ${collected ? `"${item.dawnText}"` : 'Bantu tetangga di lorong dan temukan balasannya di keset pintu 304.'}
+                        </p>
+                    </div>
+                `;
+            }).join('')}
+
+            <button onclick="closeModal()" class="m-btn secondary">Tutup</button>
+        </div>
+    `);
+}
+
+// --- SILENT DELIVERY AT NEIGHBOR DOOR (STEP 4 PER NIGHT + REACTIVE REVISITS) ---
 function handleNeighborDoorInteraction(whoKey, roomNum, name, itemKey, itemName) {
     if (gameState.delivered[whoKey]) {
+        const revisitText = DOOR_REVISIT_DATA[whoKey] && DOOR_REVISIT_DATA[whoKey][gameState.night];
+        if (revisitText) {
+            const bonusKey = `${whoKey}_n${gameState.night}`;
+            if (!gameState.revisitBonusGiven[bonusKey]) {
+                gameState.revisitBonusGiven[bonusKey] = true;
+                gameState.resilience = Math.min(gameState.maxResilience, gameState.resilience + 5);
+                audio.playSFX('chime');
+                saveGameProgress();
+                updateHUD();
+                showToast(`Mengintip kabar Kamar ${roomNum} menenangkan hatimu (+5 Mental)`, '💛');
+            } else {
+                showToast(`Kamar ${roomNum} (${name}) tampak tenang malam ini.`, '🕊️');
+            }
+            setMonologue(revisitText, `Kabar hangat dari Kamar ${roomNum} (${name}).`);
+            return;
+        }
         showToast(`Kamar ${roomNum} (${name}) sudah menerima bantuanmu.`, '✓');
         return;
     }
     if (!gameState.crafted[itemKey]) {
         showToast(`Perbaiki ${itemName} di Meja Kerja Kamar 304 terlebih dahulu!`, '⚠️');
-        setMonologue(`Aku belum membawa ${itemName} untuk ${name}.`, 'Periksa Ventilasi, Kotak Rongsokan, lalu Meja Kerja.');
+        setMonologue(`Aku belum membawa ${itemName} untuk ${name}.`, 'Periksa Ventilasi, barang di lorong, lalu Meja Kerja.');
         return;
     }
 
@@ -728,6 +810,11 @@ function advanceToNight(nextNight) {
 
 // --- ROOFTOP CLIMAX & VISUAL CUTSCENE ENGINE ---
 function openClimaxRooftopModal() {
+    const resNow = Math.floor(gameState.resilience);
+    const canLanterns = gameState.resilience >= 30;
+    const hasPriorReplies = Boolean(gameState.repliesCollected.ratna && gameState.repliesCollected.damar);
+    const canTrueEnding = gameState.resilience >= 50 && hasPriorReplies;
+
     openModal(`
         <div>
             <span class="m-kicker rose">Babak Penentuan • Atap Gedung</span>
@@ -738,25 +825,29 @@ function openClimaxRooftopModal() {
             </p>
 
             <button onclick="startEndingCutscene('avoidant')" class="choice-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px;">Pilihan A: Beri Sinyal ke Tangga & Panggil Damar</strong>
-                    <span class="pill-badge warn">Tetap Tersembunyi</span>
+                    <span class="pill-badge warn" style="flex-shrink:0;">Tetap Tersembunyi</span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#cbd5e1;">Sorotkan sinyal senter ke bawah memanggil Damar, lalu mundur ke bayangan tangga sebelum terlihat.</p>
             </button>
 
             <button onclick="startEndingCutscene('lanterns')" class="choice-card emerald-border">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px; color:#6ee7b7;">Pilihan B: Susun Jalur Lentera Lumut</strong>
-                    <span class="pill-badge">Butuh 30 Mental</span>
+                    <span class="pill-badge ${canLanterns ? '' : 'danger'}" style="flex-shrink:0;">
+                        ${canLanterns ? '✓ Mental ≥ 30' : `Butuh 30 Mental (${resNow})`}
+                    </span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#cbd5e1;">Letakkan deretan lentera lumut di lantai basah sebagai jejak visual agar Sora menoleh dan menjauh dari tepian.</p>
             </button>
 
             <button onclick="startEndingCutscene('threshold')" class="choice-card gold-border">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
                     <strong style="font-size:15px; color:#fde68a;">Pilihan C: Melangkah, Buka Payung & Duduk Bersama</strong>
-                    <span class="pill-badge" style="background:#f59e0b; color:#090b0e; border-color:#fbbf24;">Ending Sejati</span>
+                    <span class="pill-badge ${canTrueEnding ? '' : 'danger'}" style="flex-shrink:0; ${canTrueEnding ? 'background:#f59e0b; color:#090b0e; border-color:#fbbf24;' : ''}">
+                        ${canTrueEnding ? '✓ Ending Sejati' : `Butuh 50 Mental (${resNow})`}
+                    </span>
                 </div>
                 <p style="margin:0; font-size:13px; color:#fef3c7;">Lawan ketakutan terbesarmu. Berjalanlah ke sampingnya, buka payung, dan temani dalam diam hingga fajar tiba.</p>
             </button>
@@ -768,6 +859,16 @@ window.startEndingCutscene = function(type) {
     if (type === 'lanterns' && gameState.resilience < 30) {
         showToast('Butuh minimal 30 Mental untuk Pilihan B! Rawat lumut/sup di Kamar 304 dulu.', '⚠️');
         return;
+    }
+    if (type === 'threshold') {
+        if (!gameState.repliesCollected.ratna || !gameState.repliesCollected.damar) {
+            showToast('Kumpulkan Balasan Sunyi Malam 1 & 2 terlebih dahulu untuk membuka Ending Sejati.', '💌');
+            return;
+        }
+        if (gameState.resilience < 50) {
+            showToast('Butuh minimal 50 Mental untuk Pilihan C! Turun sebentar ke Kamar 304 untuk menyeduh sup atau merawat lumut.', '⚠️');
+            return;
+        }
     }
 
     closeModal();
@@ -1101,6 +1202,7 @@ function updateSimulation(dt) {
     }
     gameState.playerX = Math.max(85, Math.min(935, gameState.playerX));
     if (moving) gameState.walkPhase += dt * (gameState.isHiding ? 6 : 11);
+    audio.tickPlayerFootstep(dt, moving, gameState.isHiding, gameState.area);
 
     // Self-care gradual neglect decay
     if (!gameState.isDawn) {
@@ -1121,12 +1223,14 @@ function updateSimulation(dt) {
         }
     } else if (gameState.area === 'hallway') {
         const inCover = gameState.isHiding && COVER_SPOTS.some(c => Math.abs(gameState.playerX - c.x) < 48);
+        const movingUpright = moving && !gameState.isHiding;
 
-        // Ambient anxiety load
+        // Ambient anxiety load + Sprint Noise Stress when walking openly without sneaking
         if (gameState.groundingAuraTimer <= 0 && !inCover) {
-            const nightRate = gameState.night === 3 ? 3.0 : (gameState.night === 2 ? 2.4 : 1.9);
-            const hideFactor = gameState.isHiding ? 0.35 : 1.0;
-            gameState.sensoryLoad += nightRate * hideFactor * dt;
+            const nightRate = gameState.night === 3 ? 3.2 : (gameState.night === 2 ? 2.6 : 2.1);
+            const hideFactor = gameState.isHiding ? 0.32 : 1.0;
+            const noiseExtra = movingUpright ? 1.5 : 0;
+            gameState.sensoryLoad += (nightRate * hideFactor + noiseExtra) * dt;
         }
 
         // Soothing distant keroncong near Door 301 once delivered
@@ -1134,6 +1238,53 @@ function updateSimulation(dt) {
             audio.tickProximityKeroncong(dt, gameState.playerX);
             if (Math.abs(gameState.playerX - 120) < 90) {
                 gameState.sensoryLoad = Math.max(0, gameState.sensoryLoad - 1.4 * dt);
+            }
+        }
+
+        // Door Creak Warning & Neighbor Peek Hazard ("Gagang Pintu Berderit")
+        if (!gameState.isDawn) {
+            if (!gameState.doorPeek) {
+                gameState.doorPeekCooldown -= dt;
+                if (gameState.doorPeekCooldown <= 0) {
+                    const doors = [
+                        { roomNum: '301', x: 120 },
+                        { roomNum: '302', x: 300 },
+                        { roomNum: '305', x: 770 }
+                    ];
+                    const pick = doors[Math.floor(Math.random() * doors.length)];
+                    audio.playSFX('creak');
+                    gameState.doorPeek = {
+                        roomNum: pick.roomNum,
+                        x: pick.x,
+                        phase: 'warning',
+                        timer: 1.9,
+                        hitApplied: false
+                    };
+                }
+            } else {
+                const dp = gameState.doorPeek;
+                dp.timer -= dt;
+                if (dp.phase === 'warning' && dp.timer <= 0) {
+                    dp.phase = 'open';
+                    dp.timer = 2.1;
+                    audio.playSFX('door');
+                } else if (dp.phase === 'open') {
+                    const inBeam = Math.abs(gameState.playerX - dp.x) < 108;
+                    if (!dp.hitApplied && inBeam) {
+                        dp.hitApplied = true;
+                        if (!inCover && !gameState.isHiding && gameState.groundingAuraTimer <= 0) {
+                            gameState.sensoryLoad = Math.min(100, gameState.sensoryLoad + 22);
+                            audio.playSFX('panic');
+                            showToast(`Pintu ${dp.roomNum} terbuka! Merunduk [S] atau cari Spot Sembunyi!`, '👁️');
+                        } else {
+                            showToast(`Nyaris terlihat dari Pintu ${dp.roomNum}! Aman karena mengendap.`, '🙈');
+                        }
+                    }
+                    if (dp.timer <= 0) {
+                        gameState.doorPeek = null;
+                        gameState.doorPeekCooldown = gameState.night === 3 ? (8.5 + Math.random() * 4) : (10.5 + Math.random() * 5);
+                    }
+                }
             }
         }
 
@@ -1167,11 +1318,11 @@ function updateSimulation(dt) {
             }
         }
 
-        // Proximity Anxiety Spike
+        // Proximity Anxiety Spike (Moving upright makes bigger noise detection radius!)
         const distToNPC = Math.abs(gameState.playerX - npc.x);
-        const detectionRange = inCover ? 0 : (gameState.isHiding ? 75 : 125);
+        const detectionRange = inCover ? 0 : (gameState.isHiding ? 72 : (movingUpright ? 155 : 125));
         if (distToNPC < detectionRange && gameState.groundingAuraTimer <= 0) {
-            const penalty = (detectionRange - distToNPC) * (gameState.isHiding ? 0.14 : 0.36);
+            const penalty = (detectionRange - distToNPC) * (gameState.isHiding ? 0.14 : 0.38);
             gameState.sensoryLoad += penalty * dt;
         }
 
@@ -1210,7 +1361,41 @@ function updateSimulation(dt) {
     updateHUD();
 }
 
-// --- INPUT LISTENERS ---
+// --- INPUT LISTENERS & MOBILE LIFECYCLE SAFETY ---
+const clearMovementFlags = () => {
+    gameState.moveLeft = false;
+    gameState.moveRight = false;
+};
+window.addEventListener('blur', clearMovementFlags);
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) clearMovementFlags();
+});
+
+// Capacitor Android Hardware Back Button Handling
+if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+    window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
+        if (gameState.modalOpen) {
+            closeModal();
+            return;
+        }
+        if (gameState.area === 'rooftop' && !(gameState.cutscene && gameState.cutscene.active)) {
+            switchArea('hallway', 895);
+            return;
+        }
+        if (gameState.area === 'hallway') {
+            showToast('Kembali masuk ke Pintu 304 untuk menutup game atau membuka Jurnal.', '🏠');
+            return;
+        }
+        const titleEl = document.getElementById('title-screen');
+        if (titleEl && titleEl.classList.contains('hidden')) {
+            openJournalModal('mission');
+            return;
+        }
+        if (canGoBack) window.history.back();
+        else window.Capacitor.Plugins.App.exitApp();
+    });
+}
+
 window.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
         gameState.moveLeft = true;

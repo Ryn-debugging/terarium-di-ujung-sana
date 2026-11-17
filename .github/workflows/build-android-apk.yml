@@ -69,10 +69,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="latest"
+          TITLE="Terarium di Ujung Lorong v3.0 (Android APK)"
+          NOTES="Build APK Android v3.0: Gagang Pintu Berderit (Door Peek stealth), titik rongsokan dinamis 3 malam, mini-game Piezo Raindrop Rhythm & PCB acak, Sudut Kenangan Kamar 304, syarat Ending Sejati (>= 50 Mental), serta dukungan tombol Back Android & notch safe-area."
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" Terarium-di-Ujung-Lorong.apk --clobber
+            gh release edit "$TAG" --title "$TITLE" --notes "$NOTES"
           else
             gh release create "$TAG" Terarium-di-Ujung-Lorong.apk \
-              --title "Terarium di Ujung Lorong v2.0 (Android APK)" \
-              --notes "Build APK Android otomatis untuk game Terarium di Ujung Lorong (3 Malam, Mini-Game Reparasi, Mode Mengendap, Audio Spasial, Offline Ready)."
+              --title "$TITLE" \
+              --notes "$NOTES"
           fi

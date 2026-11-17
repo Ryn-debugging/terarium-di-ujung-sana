@@ -4,12 +4,14 @@ Generate Android launcher & adaptive foreground icons from icons/icon-512.png
 and apply dark atmospheric theme colors (#07090c) inside generated android/ res.
 """
 import os
+import re
 from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_ICON = ROOT / "icons" / "icon-512.png"
 RES_DIR = ROOT / "android" / "app" / "src" / "main" / "res"
+APP_GRADLE = ROOT / "android" / "app" / "build.gradle"
 
 LEGACY_SIZES = {
     "mipmap-mdpi": 48,
@@ -45,6 +47,10 @@ def main() -> None:
         raise FileNotFoundError(f"Missing Android res dir: {RES_DIR}")
 
     base = Image.open(SRC_ICON).convert("RGBA")
+
+    # Remove default Capacitor template vector foregrounds if present so mipmaps never clash
+    for stale in RES_DIR.glob("drawable*/ic_launcher_foreground.*"):
+        stale.unlink(missing_ok=True)
 
     for folder, size in LEGACY_SIZES.items():
         target_dir = RES_DIR / folder
@@ -111,7 +117,13 @@ def main() -> None:
             )
             styles_xml.write_text(txt, encoding="utf-8")
 
-    print("Prepared Android launcher & adaptive icons cleanly.")
+    if APP_GRADLE.exists():
+        gradle_txt = APP_GRADLE.read_text(encoding="utf-8")
+        gradle_txt = re.sub(r'versionCode\s+\d+', 'versionCode 3', gradle_txt)
+        gradle_txt = re.sub(r'versionName\s+"[^"]+"', 'versionName "3.0.0"', gradle_txt)
+        APP_GRADLE.write_text(gradle_txt, encoding="utf-8")
+
+    print("Prepared Android launcher icons, styles & versionCode 3 (3.0.0) cleanly.")
 
 
 if __name__ == "__main__":

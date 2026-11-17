@@ -15,18 +15,37 @@ Dibangun **100% offline-ready & zero external CDN** menggunakan **HTML5 Canvas 2
 
 ---
 
-## ✨ Pembaruan Besar v2.0 (The Complete 3-Night Edition)
+## ✨ Pembaruan Besar v3.0 (Tactical Stealth & Senior Polish Edition)
+
+- 🚪 **Stealth Taktis & Bahaya "Gagang Berderit":**
+  - Pintu tetangga kini sesekali berderit bergetar (`1.9` detik peringatan + suara decit kayu) sebelum terbuka mengintip lorong. Segera tekan `[S]` / `🙈` atau sembunyi di **Pot Tanaman / Ceruk Tangga** sebelum sorot lampu menyambar!
+  - Berjalan tegak di lorong kini menimbulkan suara langkah yang memperluas radius deteksi tetangga (`155px` vs `72px` saat mengendap).
+- 🧭 **Lokasi Pencarian Unik di Tiap Malam & Reaktif Tetangga:**
+  - Setiap malam barang terjatuh di titik lorong yang berbeda (*Malam 1:* Kotak Rongsokan Tengah `x: 460`, *Malam 2:* Sudut Tangga Kanan `x: 830`, *Malam 3:* Koridor Barat `x: 210`).
+  - Pintu tetangga yang sudah dibantu pada malam sebelumnya bisa dijenguk kembali di malam berikutnya untuk melihat kondisi mereka + bonus `+5 Mental`.
+- 🥁 **Mini-Game Lebih Hidup:**
+  - *Malam 2 (PCB Senter):* Pin kanan sirkuit diacak (*Fisher-Yates*) setiap kali percobaan agar tidak bisa ditebak hafalan.
+  - *Malam 3 (Lentera Sora):* **Kalibrasi Irama Sensor Hujan (Piezo Rhythm)** — ketuk kaca tepat saat cincin tetesan air biru beresonansi di zona hijau (`3×` akurat).
+- 🎶 **Melodi Keroncong Terarah & Audio Lifecycle:**
+  - Dekat Pintu 301 dan di mini-game radio kini mengalunkan frasa 12-nada keroncong asli yang harmonis, serta audio otomatis di-pause bersih saat tab/aplikasi masuk background (`visibilitychange` & `window.blur`).
+- 🌸 **Sudut Kenangan Kamar 304 & Syarat Ending Sejati:**
+  - Tersedia hotspot khusus **`Kenangan`** (`x: 635`) di Kamar 304 untuk menginspeksi Kue Putu Bu Ratna, Termos Mas Damar, dan Sketsa Cat Air Sora beserta refleksi fajar.
+  - **Ending C (Akhir Sejati)** kini benar-benar menuntut persiapan matang: **Ketahanan Mental ≥ 50** + lengkapnya **Balasan Sunyi Malam 1 & 2**.
+- 📱 **Polesan Mobile & Android APK v3.0:**
+  - Dukungan penuh area aman layar berponi (*notch / gesture bar* `env(safe-area-inset-*)`), penanganan **tombol Back fisik Android** (`@capacitor/app`), dan *versionCode 3 / 3.0.0*.
+
+---
+
+## ✨ Fondasi Lengkap 3 Malam (v2.0 → v3.0)
 
 - 🌙 **Alur Cerita 3 Malam Berkelanjutan:** Kisah tidak lagi terjadi dalam satu malam datar—setiap tetangga mendapat fokus malamnya sendiri dengan cuaca badai, kecepatan patroli, dan ketegangan yang meningkat dari **Malam 1 → Malam 2 → Malam 3**.
 - 🛠️ **3 Mini-Game Reparasi Unik di Meja Kerja:**
   - *Malam 1 (Radio Bu Ratna):* **Kalibrasi Frekuensi 88.4 MHz** dengan osiloskop live & audio statik-ke-keroncong real-time.
-  - *Malam 2 (Senter Mas Damar):* **Sambung Sirkuit PCB & Baut Pengait Baja** (cocokkan terminal kutub + ground + driver LED).
-  - *Malam 3 (Lentera Sora):* **Rakit Terarium Sensor Hujan 3 Langkah** (susun lapisan batu/arang/lumut → jaga kelembapan `65%–80%` → pasang sensor getar piezoelektrik).
-- 🙈 **Mode Mengendap & Cover Spot di Lorong:** Tekan `[S]` / `[Shift]` atau tombol **`🙈`** untuk merunduk memperlambat langkah di lorong dan bersembunyi di **Pot Tanaman Sudut** atau **Ceruk Bayangan Tangga** saat tetangga melintas.
-- 💌 **Sistem "Balasan Sunyi" & Tirai Kamar 304:** Setiap selesai membantu tetangga, sepucuk surat dan bingkisan kecil muncul di depan pintu 304. Mengambilnya menambahkan benda kenangan ke kamar dan menyibak tirai jendela sedikit demi sedikit.
+  - *Malam 2 (Senter Mas Damar):* **Sambung Sirkuit PCB Acak & Baut Pengait Baja** (cocokkan terminal kutub + ground + driver LED).
+  - *Malam 3 (Lentera Sora):* **Rakit Terarium Sensor Hujan 3 Langkah** (susun lapisan batu/tanah/lumut → jaga kelembapan `65%–80%` → kalibrasi irama piezo).
+- 💌 **Sistem "Balasan Sunyi" & Tirai Kamar 304:** Setiap selesai membantu tetangga, sepucuk surat dan bingkisan kecil muncul di depan pintu 304. Mengambilnya menambahkan benda kenangan ke **Sudut Kenangan** dan menyibak tirai jendela sedikit demi sedikit.
 - 🌅 **Cutscene Visual & Epilog Fajar (True Ending):** Ketiga ending memiliki animasi cutscene canvas tersendiri. Pada **Ending Sejati**, saksikan badai mereda menjadi langit keemasan pagi bersama Sora, lalu lanjutkan menjelajahi **Kamar 304 di suasana fajar**.
-- 🎧 **Audio Spasial 3D & Keroncong Proximity:** Langkah kaki NPC lorong menggunakan panning stereo kanan/kiri sesuai posisi relatifmu; setelah radio 301 diperbaiki, melodi keroncong lembut terdengar saat mendekati pintu Bu Ratna.
-- 💾 **Auto-Save & Galeri Akhir:** Progres malam dan koleksi ending (`0/3` → `3/3`) otomatis tersimpan di `localStorage` perangkat.
+- 💾 **Auto-Save & Galeri Akhir:** Progres malam dan koleksi ending (`0/3` → `3/3`) otomatis tersimpan di `localStorage` perangkat (kompatibel penuh dengan save v2.0).
 
 ---
 
@@ -34,11 +53,11 @@ Dibangun **100% offline-ready & zero external CDN** menggunakan **HTML5 Canvas 2
 
 Kamu adalah **Raka**, penghuni **Kamar 304 di Rusunawa Asoka**. Melalui celah ventilasi kamar, Raka mendengar suara kesulitan para tetangga, memperbaiki barang rusak mereka secara diam-diam, lalu meletakkannya di depan pintu masing-masing sebelum fajar:
 
-| Malam | Karakter & Kamar | Mini-Game Reparasi | Balasan Sunyi (Hadiah di Pintu 304) |
+| Malam | Karakter & Kamar | Titik Pencarian & Reparasi | Balasan Sunyi (Hadiah di Pintu 304) |
 |---|---|---|---|
-| **Malam 1** *(22:15 WIB)* | **Bu Ratna** — Kamar 301 | 📻 Kalibrasi Gelombang Radio `88.4 MHz` | 🍡 Sepiring Kue Putu Hangat & Surat |
-| **Malam 2** *(23:40 WIB)* | **Mas Damar** — Kamar 302 | 🔦 Sambung Jalur PCB Senter & Baut Pengait | ☕ Termos Kecil Kopi Jahe & Memo |
-| **Malam 3** *(01:15 WIB)* | **Sora** — Kamar 305 | 🫙 Rakit Terarium Lentera Sensor Hujan | 🎨 Sketsa Payung Cat Air & Teh Chamomile |
+| **Malam 1** *(22:15 WIB)* | **Bu Ratna** — Kamar 301 | 📻 Kotak Rongsokan Tengah → Kalibrasi `88.4 MHz` | 🍡 Sepiring Kue Putu Hangat & Surat |
+| **Malam 2** *(23:40 WIB)* | **Mas Damar** — Kamar 302 | 🔦 Sudut Tangga Kanan → Sambung PCB Acak & Baut | ☕ Termos Kecil Kopi Jahe & Memo |
+| **Malam 3** *(01:15 WIB)* | **Sora** — Kamar 305 | 🫙 Koridor Barat → Rakit Terarium & Irama Piezo | 🎨 Sketsa Payung Cat Air & Teh Chamomile |
 
 ---
 
@@ -50,7 +69,7 @@ Di puncak badai Malam Ketiga, pintu **Tangga Atap** terbuka. Sora—yang kehilan
    Memberi sinyal cahaya ke lantai bawah agar Mas Damar naik menjemput Sora, lalu mundur ke balik bayangan. Semua selamat, namun tirai Kamar 304 tetap tertutup.
 2. **Akhir B — Jembatan Cahaya Lumut *(Silent Empathy Ending • Syarat: Mental ≥ 30)*:**
    Menyusun barisan toples lentera berpendar hijau di atas beton basah untuk menuntun perhatian visual Sora menjauh dari tepian atap.
-3. **Akhir Sejati — Kaca yang Sedikit Terbuka *(Bittersweet Dawn • True Ending)*:**
+3. **Akhir Sejati — Kaca yang Sedikit Terbuka *(True Ending • Syarat: Mental ≥ 50 & Balasan Malam 1–2)*:**
    Melangkah mendekati Sora di tengah rasa cemas terbesarmu, membuka payung, dan duduk menemaninya dalam diam hingga fajar keemasan menyingsing. Membuka mode bebas **Epilog Pagi Kamar 304**.
 
 ---
@@ -58,8 +77,8 @@ Di puncak badai Malam Ketiga, pintu **Tangga Atap** terbuka. Sora—yang kehilan
 ## 🎮 Mekanika & Kontrol
 
 ### Mekanika Bertahan
-- **💚 Ketahanan Mental:** Pulihkan dengan **Masak Sup Hangat** (maksimal **2× per malam**, aduk 3× untuk `+30 Mental` & pulihkan batas maksimum mental) dan **Rawat Terarium Lumut** (`+20 Mental`, *cooldown* 22 detik).
-- **⚡ Cemas Sosial & Mengendap:** Meningkat di lorong rusun. Gunakan **Spot Sembunyi** sambil menekan mode mengendap untuk menahan lonjakan cemas saat tetangga lewat, atau gunakan **🌬️ Tarik Napas (`[SPASI]`)** untuk meredakan `-35% Cemas` dengan imbalan `-20 Mental`.
+- **💚 Ketahanan Mental:** Pulihkan dengan **Masak Sup Hangat** (maksimal **2× per malam**, aduk 3× untuk `+30 Mental` & pulihkan batas maksimum mental), **Rawat Terarium Lumut** (`+20 Mental`, *cooldown* 22 detik), atau **menjenguk pintu tetangga** yang sudah terbantu di malam berikutnya (`+5 Mental`).
+- **⚡ Cemas Sosial & Mengendap:** Meningkat di lorong rusun (lebih cepat jika berjalan tegak tanpa mengendap!). Gunakan **Spot Sembunyi** dan tombol mengendap (`[S]` / `🙈`) untuk meredam lonjakan cemas saat tetangga lewat maupun saat muncul peringatan **`⚠️ Gagang Berderit`**, atau gunakan **🌬️ Tarik Napas (`[SPASI]`)** untuk menurunkan `-35% Cemas` dengan imbalan `-20 Mental`.
 - **🔄 Sensory Overload Safety Net:** Jika cemas menyentuh `100%`, Raka mundur aman ke Kamar 304 tanpa *game over* keras (batas maksimal mental sedikit berkurang hingga dipulihkan sup hangat).
 
 ### Kontrol Permainan
@@ -70,8 +89,8 @@ Di puncak badai Malam Ketiga, pintu **Tangga Atap** terbuka. Sora—yang kehilan
   - `[Spasi]`: **Tarik Napas Tenang**
   - **Klik Kiri Mouse:** *Click-to-move* atau interaksi langsung objek
 - **Smartphone (Portrait & Landscape):**
-  - Layar otomatis menyesuaikan HUD ringkas dan **Smart Mobile Camera** mengikuti posisi Raka di layar HP.
-  - Gunakan tombol virtual **`◀`**, **`🙈`** *(saat di lorong)*, **`🌬️`**, **`AKSI`**, **`▶`** atau sentuh langsung area tujuan di layar.
+  - Layar otomatis menyesuaikan HUD ringkas, aman dari poni kamera/gesture bar (*safe-area*), serta mendukung **Smart Mobile Camera** mengikuti posisi Raka di layar HP.
+  - Gunakan tombol virtual **`◀`**, **`🙈`** *(saat di lorong)*, **`🌬️`**, **`AKSI`**, **`▶`** atau sentuh langsung area tujuan di layar; di Android APK tersedia dukungan penuh tombol **Back** hardware untuk menutup dialog/navigasi aman.
 
 ---
 
@@ -80,12 +99,12 @@ Di puncak badai Malam Ketiga, pintu **Tangga Atap** terbuka. Sora—yang kehilan
 ### Opsi 1: Download & Install Langsung File `.APK` Android
 1. Unduh **`Terarium-di-Ujung-Lorong.apk`** langsung dari [**GitHub Releases (Latest)**](https://github.com/Ryn-debugging/terarium-di-ujung-sana/releases/download/latest/Terarium-di-Ujung-Lorong.apk) *(atau tab **Actions** → workflow `Build Android APK`)*.
 2. Buka file `.apk` di HP Android kamu dan izinkan *Install from unknown sources / Sumber tidak dikenal* jika diminta.
-3. Game langsung terpasang dengan ikon terarium di laci aplikasi dan berjalan **100% offline**.
+3. Game langsung terpasang dengan ikon terarium di laci aplikasi dan berjalan **100% offline** *(v3.0 otomatis menimpa instalasi v2.0 tanpa menghapus save data jika berasal dari rilis GitHub Actions yang sama atau setelah izin update)*.
 
 ### Opsi 2: Install Langsung via Browser HP (PWA Full-Screen Offline)
 1. Buka **[https://ryn-debugging.github.io/terarium-di-ujung-sana/](https://ryn-debugging.github.io/terarium-di-ujung-sana/)** di Chrome (Android) atau Safari (iOS).
 2. Ketuk **`📲 Install / APK`** di layar judul, atau pilih **"Tambahkan ke Layar Utama / Install App"** pada menu browser.
-3. Service Worker otomatis meng-cache seluruh aset agar bisa dimainkan kapan saja tanpa internet.
+3. Service Worker otomatis meng-cache seluruh aset (`v3.0.0`) agar bisa dimainkan kapan saja tanpa internet.
 
 ---
 
@@ -96,20 +115,20 @@ Sumber kode dikembangkan secara modular di `src/` dan dikompilasi oleh [`scripts
 ```text
 ├── src/
 │   ├── template.html      # Struktur DOM & UI HUD desktop/mobile
-│   ├── styles.css         # Desain gelap atmosferik & responsif (0 CDN)
-│   ├── story.js           # Data 3 Malam, Hotspot, Cover Spot, & 3 Ending
-│   ├── audio.js           # Web Audio Engine (hujan, piano, keroncong, stereo panning)
-│   ├── minigames.js       # Radio 88.4 MHz, Sirkuit Senter PCB, Lentera Sensor Hujan
-│   ├── renderer.js        # Canvas 2D renderer, animasi jalan, tirai dinamis, cutscenes
-│   └── main.js            # Loop delta-time, auto-save, stealth, progres malam
+│   ├── styles.css         # Desain gelap atmosferik, safe-area inset & responsif (0 CDN)
+│   ├── story.js           # Data 3 Malam, titik scavenge dinamis, Door Revisit, & Sudut Kenangan
+│   ├── audio.js           # Web Audio Engine (keroncong berurutan, langkah, decit pintu, stereo pan)
+│   ├── minigames.js       # Radio 88.4 MHz, PCB Acak, Lentera Irama Piezo
+│   ├── renderer.js        # Canvas 2D renderer, bahaya pintu mengintip, sudut kenangan, cutscenes
+│   └── main.js            # Loop delta-time, stealth taktis, save kompatibel, back-button Android
 ├── scripts/
 │   ├── build.mjs          # Bundler sumber modular -> HTML tunggal & www/
 │   └── prepare-android-icons.py
 ├── icons/                 # Ikon SVG, PNG 192/512, dan Maskable icon PWA
 ├── .github/workflows/
-│   └── build-android-apk.yml  # CI otomatis build Android APK via Capacitor 6 & Gradle
+│   └── build-android-apk.yml  # CI otomatis build Android APK v3.0 via Capacitor 6 & Gradle
 ├── manifest.webmanifest
-├── sw.js                  # Service Worker (Network-first HTML, Cache-first aset)
+├── sw.js                  # Service Worker v3.0.0 (Network-first HTML, Cache-first aset)
 ├── package.json
 ├── capacitor.config.json
 ├── index.html             # Output kompilasi Web/PWA (GitHub Pages)

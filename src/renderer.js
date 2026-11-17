@@ -234,55 +234,61 @@ function drawRoom304(ctx) {
     drawJar(350, 306, 32, 58);
     drawJar(392, 324, 24, 40);
 
-    // 3. Workbench (x=565)
+    // 3. Workbench (x=545)
     ctx.fillStyle = '#2d231e';
-    ctx.fillRect(495, 365, 140, 95);
+    ctx.fillRect(476, 365, 128, 95);
     ctx.fillStyle = '#334155';
-    ctx.fillRect(510, 332, 46, 33);
+    ctx.fillRect(492, 332, 46, 33);
     ctx.fillStyle = '#38bdf8';
-    ctx.fillRect(516, 338, 34, 18);
+    ctx.fillRect(498, 338, 34, 18);
 
     // Desk lamp
     ctx.strokeStyle = '#a8a29e';
     ctx.beginPath();
-    ctx.moveTo(610, 365);
-    ctx.lineTo(620, 320);
-    ctx.lineTo(590, 312);
+    ctx.moveTo(584, 365);
+    ctx.lineTo(592, 320);
+    ctx.lineTo(564, 312);
     ctx.stroke();
 
-    const workGlow = ctx.createRadialGradient(575, 340, 5, 575, 340, 92);
+    const workGlow = ctx.createRadialGradient(545, 340, 5, 545, 340, 88);
     workGlow.addColorStop(0, 'rgba(251, 191, 36, 0.28)');
     workGlow.addColorStop(1, 'rgba(251, 191, 36, 0)');
     ctx.fillStyle = workGlow;
     ctx.beginPath();
-    ctx.arc(575, 340, 92, 0, Math.PI * 2);
+    ctx.arc(545, 340, 88, 0, Math.PI * 2);
     ctx.fill();
 
-    // Silent Reply Collectibles displayed on Workbench / Shelf!
+    // 3b. Sudut Kenangan / Keepsake Side Table & Wall Shelf (x=635)
+    ctx.fillStyle = '#382a22';
+    ctx.fillRect(612, 385, 54, 75);
+    ctx.strokeStyle = '#574134';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(612, 385, 54, 75);
+
     if (gameState.repliesCollected.ratna) {
         // Plate with green/white Kue Putu
         ctx.fillStyle = '#e2e8f0';
-        ctx.fillRect(566, 359, 26, 5);
+        ctx.fillRect(617, 380, 24, 5);
         ctx.fillStyle = '#10b981';
-        ctx.fillRect(570, 351, 8, 8);
-        ctx.fillRect(580, 351, 8, 8);
+        ctx.fillRect(620, 372, 7, 8);
+        ctx.fillRect(630, 372, 7, 8);
     }
     if (gameState.repliesCollected.damar) {
         // Ginger coffee thermos
         ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(618, 336, 12, 29);
+        ctx.fillRect(647, 357, 12, 28);
         ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(618, 332, 12, 5);
+        ctx.fillRect(647, 353, 12, 5);
     }
     if (gameState.repliesCollected.sora) {
-        // Small framed painting on wall above workbench
+        // Small framed painting on wall above keepsake corner
         ctx.fillStyle = '#78350f';
-        ctx.fillRect(540, 265, 48, 38);
+        ctx.fillRect(615, 290, 48, 38);
         ctx.fillStyle = '#fef3c7';
-        ctx.fillRect(544, 269, 40, 30);
+        ctx.fillRect(619, 294, 40, 30);
         ctx.fillStyle = '#f59e0b';
         ctx.beginPath();
-        ctx.arc(564, 282, 9, Math.PI, 0);
+        ctx.arc(639, 307, 9, Math.PI, 0);
         ctx.fill();
     }
 
@@ -423,13 +429,52 @@ function drawHallway(ctx) {
         ctx.fill();
     }
 
-    // Neighbor Doors
+    // Neighbor Doors (with Door Creak Warning / Peek Event!)
+    const dp = gameState.doorPeek;
     const drawCorridorDoor = (dx, num, isRaka, delivered) => {
-        ctx.fillStyle = isRaka ? '#292019' : '#18262d';
+        const isPeekingThisDoor = dp && dp.roomNum === num;
+        const isWarn = isPeekingThisDoor && dp.phase === 'warning';
+        const isOpen = isPeekingThisDoor && dp.phase === 'open';
+
+        ctx.fillStyle = isOpen ? '#fde68a' : (isRaka ? '#292019' : '#18262d');
         ctx.fillRect(dx - 38, 235, 76, 225);
-        ctx.strokeStyle = isRaka ? '#b45309' : (delivered ? '#10b981' : '#334155');
-        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = isWarn ? '#fbbf24' : (isOpen ? '#f43f5e' : (isRaka ? '#b45309' : (delivered ? '#10b981' : '#334155')));
+        ctx.lineWidth = isPeekingThisDoor ? 3.5 : 2.5;
         ctx.strokeRect(dx - 38, 235, 76, 225);
+
+        // Vibrating handle during warning
+        if (isWarn) {
+            const shakeY = Math.sin(now * 0.06) * 2.5;
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(dx + 22, 344 + shakeY, 10, 5);
+            ctx.font = '700 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('⚠️ Gagang Berderit', dx, 224);
+        }
+
+        // Light cone spilling into hallway when door cracks open
+        if (isOpen) {
+            const cone = ctx.createRadialGradient(dx, 370, 12, dx, 420, 125);
+            cone.addColorStop(0, 'rgba(253, 224, 71, 0.42)');
+            cone.addColorStop(1, 'rgba(253, 224, 71, 0)');
+            ctx.fillStyle = cone;
+            ctx.beginPath();
+            ctx.moveTo(dx - 15, 240);
+            ctx.lineTo(dx - 115, 465);
+            ctx.lineTo(dx + 115, 465);
+            ctx.lineTo(dx + 15, 240);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.beginPath();
+            ctx.arc(dx, 330, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fb7185';
+            ctx.font = '700 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('👁️ Mengintip! (Sembunyi!)', dx, 224);
+        }
 
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(dx - 20, 258, 40, 18);
@@ -485,18 +530,32 @@ function drawHallway(ctx) {
     ctx.strokeRect(664, 210, 48, 250);
     drawCoverLabel(ctx, 688, 200);
 
-    // Hallway Trash / Discarded Items Box (x=460)
+    // Hallway Fixed Trash Bin (x=460) + Dynamic Per-Night Dropped Prop (conf.trashX)
     ctx.fillStyle = '#1e293b';
     ctx.fillRect(435, 395, 50, 65);
     ctx.strokeStyle = '#475569';
     ctx.strokeRect(435, 395, 50, 65);
 
     const nightConf = NIGHT_DATA[gameState.night];
-    if (nightConf && gameState.clues[nightConf.neighborKey] && !gameState.inventory[nightConf.inventoryKey]) {
-        ctx.fillStyle = '#fbbf24';
-        ctx.beginPath();
-        ctx.arc(460, 384 + Math.sin(now * 0.006) * 4, 4.5, 0, Math.PI * 2);
-        ctx.fill();
+    if (nightConf) {
+        const tx = nightConf.trashX;
+        if (gameState.night === 2) {
+            // Dropped metal clip & flashlight near right stairwell
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(tx - 10, 449, 20, 9);
+        } else if (gameState.night === 3) {
+            // Fallen jar & torn paper near west hallway
+            ctx.fillStyle = 'rgba(167, 243, 208, 0.35)';
+            ctx.fillRect(tx - 8, 444, 16, 15);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(tx + 10, 452, 10, 6);
+        }
+        if (gameState.clues[nightConf.neighborKey] && !gameState.inventory[nightConf.inventoryKey]) {
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.arc(tx, 384 + Math.sin(now * 0.006) * 4, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 
     // Emergency Stairs to Rooftop (x=915)
@@ -511,12 +570,13 @@ function drawHallway(ctx) {
         ctx.fillRect(882 + s * 8, 440 - s * 28, 60 - s * 8, 10);
     }
 
-    // Patrol NPC Shadow Silhouette
+    // Patrol NPC Shadow Silhouette (Noise-aware Detection Aura)
     const npc = gameState.hallwayNPC;
+    const isMovingUpright = !gameState.isHiding && (gameState.moveLeft || gameState.moveRight || gameState.targetX !== null);
     ctx.save();
-    const auraRadius = gameState.isHiding ? 75 : 125;
+    const auraRadius = gameState.isHiding ? 72 : (isMovingUpright ? 155 : 125);
     const auraGrad = ctx.createRadialGradient(npc.x, 390, 10, npc.x, 390, auraRadius);
-    auraGrad.addColorStop(0, 'rgba(244, 63, 94, 0.28)');
+    auraGrad.addColorStop(0, isMovingUpright ? 'rgba(244, 63, 94, 0.34)' : 'rgba(244, 63, 94, 0.25)');
     auraGrad.addColorStop(1, 'rgba(244, 63, 94, 0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
@@ -830,6 +890,19 @@ function drawRaka(ctx, x, floorY) {
     ctx.beginPath();
     ctx.arc(x + panicShiver, floorY - 112 + bob + crouchOffset, 15.5, isHiding ? Math.PI * 0.7 : Math.PI * 0.85, isHiding ? Math.PI * 2.3 : Math.PI * 2.15);
     ctx.fill();
+
+    // Carrying Crafted Gift Parcel Indicator
+    const conf = NIGHT_DATA[gameState.night];
+    const carryingGift = conf && gameState.crafted[conf.craftedKey] && !gameState.delivered[conf.neighborKey];
+    if (carryingGift) {
+        const pkgX = x + gameState.facing * 20;
+        const pkgY = floorY - 62 + bob + crouchOffset;
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(pkgX - 5, pkgY - 5, 10, 10);
+        ctx.strokeStyle = '#fde68a';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(pkgX - 5, pkgY - 5, 10, 10);
+    }
 
     ctx.restore();
 }

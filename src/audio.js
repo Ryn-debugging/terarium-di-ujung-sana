@@ -1,28 +1,57 @@
 /**************************************************************************
- * PROCEDURAL WEB AUDIO ENGINE (Spatial Audio, Rain, Keroncong, SFX)
+ * PROCEDURAL WEB AUDIO ENGINE v3.0
+ * (Sequenced Keroncong Melody, Spatial Audio, Visibility Suspend, SFX)
  **************************************************************************/
+const KERONCONG_MELODY = [
+    293.66, 329.63, 349.23, 440.00, 392.00, 349.23,
+    329.63, 293.66, 261.63, 293.66, 329.63, 293.66
+];
+
 class SoundscapeEngine {
     constructor() {
         this.ctx = null;
         this.isMuted = false;
         this.isStarted = false;
+        this.isHidden = false;
         this.rainGain = null;
         this.rainFilter = null;
         this.noiseBuffer = null;
         this.pianoTimer = null;
         this.heartbeatTimer = null;
+
         this.keroncongCooldown = 0;
+        this.keroncongStep = 0;
+        this.radioStep = 0;
+        this.radioNoteTimer = 0;
+        this.playerStepTimer = 0;
 
         // Interactive Radio Tuning Nodes
         this.radioStaticNode = null;
         this.radioStaticGain = null;
         this.radioMusicOsc = null;
         this.radioMusicGain = null;
+
+        this.bindLifecycleHandlers();
+    }
+
+    bindLifecycleHandlers() {
+        if (typeof document !== 'undefined') {
+            document.addEventListener('visibilitychange', () => {
+                this.isHidden = document.hidden;
+                if (!this.ctx) return;
+                if (document.hidden) {
+                    this.stopRadioPreview();
+                    this.ctx.suspend().catch(() => {});
+                } else if (!this.isMuted) {
+                    this.ctx.resume().catch(() => {});
+                }
+            });
+        }
     }
 
     init() {
         if (this.isStarted) {
-            if (this.ctx && this.ctx.state === 'suspended') {
+            if (this.ctx && this.ctx.state === 'suspended' && !this.isHidden) {
                 this.ctx.resume().catch(() => {});
             }
             return;
@@ -106,7 +135,7 @@ class SoundscapeEngine {
     }
 
     playAmbientNote() {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         if (typeof gameState !== 'undefined' && gameState.sensoryLoad > 74) return;
 
         const isDawn = typeof gameState !== 'undefined' && (gameState.isDawn || (gameState.cutscene && gameState.cutscene.progress > 0.6 && gameState.cutscene.type === 'threshold'));
@@ -138,7 +167,7 @@ class SoundscapeEngine {
     }
 
     checkHeartbeat() {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         if (typeof gameState === 'undefined' || gameState.sensoryLoad < 45) return;
 
         const intensity = Math.min(1, (gameState.sensoryLoad - 40) / 60);
@@ -161,7 +190,7 @@ class SoundscapeEngine {
     }
 
     playSpatialFootstep(pan, proximity) {
-        if (!this.isStarted || this.isMuted || !this.ctx || !this.noiseBuffer) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx || !this.noiseBuffer) return;
         const now = this.ctx.currentTime;
         const vol = Math.max(0.015, Math.min(0.16, proximity * 0.16));
 
@@ -185,19 +214,31 @@ class SoundscapeEngine {
         src.start(now, Math.random() * 1.5, 0.16);
     }
 
+    tickPlayerFootstep(dt, moving, isHiding, area) {
+        if (!moving || isHiding || area === 'room304') {
+            this.playerStepTimer = 0.05;
+            return;
+        }
+        this.playerStepTimer -= dt;
+        if (this.playerStepTimer <= 0) {
+            this.playerStepTimer = 0.34;
+            this.playSpatialFootstep(0, 0.26);
+        }
+    }
+
     tickProximityKeroncong(dt, playerX) {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         const dist = Math.abs(playerX - 120);
         if (dist > 260) return;
 
         this.keroncongCooldown -= dt;
         if (this.keroncongCooldown > 0) return;
-        this.keroncongCooldown = 0.65;
+        this.keroncongCooldown = 0.52;
 
-        const vol = (1 - dist / 260) * 0.045;
+        const vol = (1 - dist / 260) * 0.048;
         const pan = Math.max(-1, Math.min(1, (120 - playerX) / 260));
-        const keroncongNotes = [293.66, 329.63, 349.23, 440.00, 523.25, 440.00, 349.23];
-        const freq = keroncongNotes[Math.floor(Math.random() * keroncongNotes.length)];
+        const freq = KERONCONG_MELODY[this.keroncongStep % KERONCONG_MELODY.length];
+        this.keroncongStep++;
 
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
@@ -207,21 +248,21 @@ class SoundscapeEngine {
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, now);
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(750, now);
+        filter.frequency.setValueAtTime(780, now);
 
         gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(vol, now + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.65);
+        gain.gain.linearRampToValueAtTime(vol, now + 0.035);
+        gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.56);
 
         osc.connect(filter);
         filter.connect(gain);
         this.connectWithPan(gain, pan);
         osc.start(now);
-        osc.stop(now + 0.68);
+        osc.stop(now + 0.58);
     }
 
     playThunder() {
-        if (!this.isStarted || this.isMuted || !this.ctx || !this.noiseBuffer) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx || !this.noiseBuffer) return;
         const now = this.ctx.currentTime;
         const src = this.ctx.createBufferSource();
         src.buffer = this.noiseBuffer;
@@ -267,7 +308,7 @@ class SoundscapeEngine {
 
         this.radioMusicOsc = this.ctx.createOscillator();
         this.radioMusicOsc.type = 'triangle';
-        this.radioMusicOsc.frequency.setValueAtTime(293.66, now);
+        this.radioMusicOsc.frequency.setValueAtTime(KERONCONG_MELODY[0], now);
 
         this.radioMusicGain = this.ctx.createGain();
         this.radioMusicGain.gain.setValueAtTime(0.001, now);
@@ -275,16 +316,22 @@ class SoundscapeEngine {
         this.radioMusicOsc.connect(this.radioMusicGain);
         this.radioMusicGain.connect(this.ctx.destination);
         this.radioMusicOsc.start(now);
+        this.radioStep = 0;
+        this.radioNoteTimer = 0;
     }
 
-    updateRadioTuning(clarity) {
+    updateRadioTuning(clarity, dt = 0.016) {
         if (!this.ctx || !this.radioStaticGain || !this.radioMusicGain) return;
         const now = this.ctx.currentTime;
         this.radioStaticGain.gain.setTargetAtTime((1 - clarity * 0.9) * 0.08, now, 0.06);
-        this.radioMusicGain.gain.setTargetAtTime(clarity * 0.06, now, 0.06);
-        if (this.radioMusicOsc && Math.random() < 0.2) {
-            const notes = [293.66, 329.63, 349.23, 440.00];
-            this.radioMusicOsc.frequency.setValueAtTime(notes[Math.floor(Math.random() * notes.length)], now);
+        this.radioMusicGain.gain.setTargetAtTime(clarity * 0.062, now, 0.06);
+
+        this.radioNoteTimer -= dt;
+        if (this.radioMusicOsc && this.radioNoteTimer <= 0) {
+            this.radioNoteTimer = 0.42;
+            const note = KERONCONG_MELODY[this.radioStep % KERONCONG_MELODY.length];
+            this.radioMusicOsc.frequency.setTargetAtTime(note, now, 0.03);
+            this.radioStep++;
         }
     }
 
@@ -300,7 +347,7 @@ class SoundscapeEngine {
     }
 
     playSFX(type) {
-        if (!this.isStarted || this.isMuted || !this.ctx) return;
+        if (!this.isStarted || this.isMuted || this.isHidden || !this.ctx) return;
         const now = this.ctx.currentTime;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -335,6 +382,13 @@ class SoundscapeEngine {
             gain.gain.setValueAtTime(0.08, now);
             gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
             dur = 0.26;
+        } else if (type === 'creak') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(340, now);
+            osc.frequency.linearRampToValueAtTime(275, now + 0.28);
+            gain.gain.setValueAtTime(0.03, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+            dur = 0.35;
         } else if (type === 'hide') {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(240, now);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'terarium-304-v2.0.0';
+const CACHE_NAME = 'terarium-304-v3.0.0';
 const CORE_ASSETS = [
   './',
   './index.html',

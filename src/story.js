@@ -1,5 +1,5 @@
 /**************************************************************************
- * STORY, NIGHT PROGRESSION, HOTSPOTS & ENDINGS DATA
+ * STORY, NIGHT PROGRESSION, HOTSPOTS & ENDINGS DATA (v3.0)
  **************************************************************************/
 const NIGHT_DATA = {
     1: {
@@ -8,7 +8,7 @@ const NIGHT_DATA = {
         timeLabel: '22:15 WIB',
         rainIntensity: 0.45,
         thunderChance: 0,
-        npcSpeed: 54, // pixels per second
+        npcSpeed: 56, // pixels per second
         npcFlipChance: 0.08,
         neighborKey: 'ratna',
         roomNum: '301',
@@ -16,6 +16,9 @@ const NIGHT_DATA = {
         inventoryKey: 'brokenRadio',
         craftedKey: 'itemRatna',
         itemTitle: 'Radio Keroncong Tua & Gantungan Lonceng',
+        trashX: 460,
+        trashShortTitle: 'Kotak Rongsokan',
+        trashLabel: 'Periksa Kotak Rongsokan Tengah Lorong',
         trashTitle: 'Radio Tabung Berkarat & Gantungan Kunci Patah',
         trashDesc: 'Radio lama milik almarhum Pak Hadi yang kabel speakernya putus beserta gantungan lonceng kamar 301.',
         ventQuotes: [
@@ -35,22 +38,25 @@ const NIGHT_DATA = {
         title: 'Malam Kedua: Badai dan Lampu Padam',
         timeLabel: '23:40 WIB',
         rainIntensity: 0.85,
-        thunderChance: 0.12,
-        npcSpeed: 74,
-        npcFlipChance: 0.22,
+        thunderChance: 0.14,
+        npcSpeed: 78,
+        npcFlipChance: 0.24,
         neighborKey: 'damar',
         roomNum: '302',
         neighborName: 'Mas Damar',
         inventoryKey: 'brokenFlashlight',
         craftedKey: 'itemDamar',
         itemTitle: 'Senter Kurir Modifikasi & Pengait Baja',
+        trashX: 830,
+        trashShortTitle: 'Sudut Tangga',
+        trashLabel: 'Ambil Senter Jatuh Dekat Tangga Kanan',
         trashTitle: 'Senter Tahan Air Korslet & Pengait Tas Patah',
-        trashDesc: 'Senter kerja Damar yang kemasukan air hujan beserta pengait tali tas kurir yang patah dua.',
+        trashDesc: 'Senter kerja Damar yang terjatuh di dekat tangga darurat ujung kanan lorong beserta pengait tas kurir yang patah dua.',
         ventQuotes: [
             'Terdengar bunyi barang jatuh keras dan helaan napas lelah dari Kamar 302.',
-            '"Sial, pengait tasnya patah, senternya juga mati... padahal masih ada paket obat ke ujung kota malam ini," bisik Damar cemas.'
+            '"Sial, pengait tasnya patah dan senterku jatuh dekat tangga darurat... padahal masih ada paket obat ke ujung kota malam ini," bisik Damar cemas.'
         ],
-        ventSummary: 'Mas Damar (Kamar 302), kurir shift malam, kehabisan senter dan pengait tas di tengah hujan deras saat harus mengantar obat.',
+        ventSummary: 'Mas Damar (Kamar 302), kurir shift malam, menjatuhkan senter dan pengait tasnya di ujung kanan lorong dekat tangga darurat.',
         deliveryReaction: 'Damar langsung menyalakan senter modifikasi itu di depan pintu. "Gila, terang banget! Siapa pun di lantai ini, makasih banget ya!" serunya lega.',
         replyTitle: 'Termos Kecil Kopi Jahe & Memo Damar',
         replyIcon: '☕',
@@ -64,21 +70,24 @@ const NIGHT_DATA = {
         timeLabel: '01:15 WIB',
         rainIntensity: 1.0,
         thunderChance: 0.35,
-        npcSpeed: 90,
-        npcFlipChance: 0.32,
+        npcSpeed: 94,
+        npcFlipChance: 0.34,
         neighborKey: 'sora',
         roomNum: '305',
         neighborName: 'Sora',
         inventoryKey: 'tornSketchGlass',
         craftedKey: 'itemSora',
         itemTitle: 'Terarium Lentera Sensor Hujan',
+        trashX: 210,
+        trashShortTitle: 'Koridor Barat',
+        trashLabel: 'Pungut Kaca & Sketsa di Antara 301–302',
         trashTitle: 'Toples Kaca Retak & Sketsa Langit Robek',
-        trashDesc: 'Kepingan sketsa langit malam yang robek dan botol kaca kecil di tempat sampah—beserta sobekan catatan "Atap gedung...".',
+        trashDesc: 'Kepingan sketsa langit malam yang robek dan botol kaca kecil terbawa angin badai ke lorong barat—beserta sobekan catatan "Atap gedung...".',
         ventQuotes: [
             'Kamar 305 terlalu sunyi. Tidak ada suara televisi, tidak ada gumaman—hanya suara kertas dirobek pelan.',
             'Kau ingat catatan lama pengurus rusun: Sora, pelukis muda di 305, kehilangan pendengarannya akibat saraf. Di tengah badai sekeras ini, dunianya tetap bisu dan terisolasi.'
         ],
-        ventSummary: 'Sora (Kamar 305) perlahan kehilangan pendengaran. Ia merasa terputus dari hujan yang biasa ia lukis—buatkan lentera lumut yang berkedip oleh getaran hujan agar ia bisa melihat ritme hujan.',
+        ventSummary: 'Sora (Kamar 305) perlahan kehilangan pendengaran. Pungut serpihan botol di lorong barat (antara 301–302), lalu rakit lentera getar hujan agar ia bisa melihat ritme hujan.',
         deliveryReaction: 'Sora membuka pintu perlahan, memeluk Terarium Lentera yang berpendar hijau lembut. Tanpa mendengar bunyi sekitarmu, ia berjalan pelan menuju Tangga Atap...',
         replyTitle: 'Sketsa Payung & Teh Chamomile',
         replyIcon: '🎨',
@@ -88,11 +97,40 @@ const NIGHT_DATA = {
     }
 };
 
+const DOOR_REVISIT_DATA = {
+    ratna: {
+        2: 'Dari balik pintu 301 terdengar senandung pelan Bu Ratna mengikuti lagu keroncong lama. Lampu kamarnya tampak lebih hangat malam ini.',
+        3: 'Bu Ratna tertidur pulas ditemani desis radio 88.4 MHz yang stabil meski badai menghantam kaca lorong.'
+    },
+    damar: {
+        3: 'Tertempel secarik sticky note kecil di pintu 302: "Paket obat malam aman sentosa! Tetap sehat terus, penghuni 304."'
+    }
+};
+
+const KEEPSAKE_REFLECTIONS = {
+    ratna: {
+        icon: '🍡',
+        title: 'Piring Kue Putu Bu Ratna',
+        dawnText: 'Piring keramik kecil itu kini bersih di sudut meja. Aku tak pernah menyangka kue sederhana bisa membuat ruangan sunyi ini terasa lebih hidup.'
+    },
+    damar: {
+        icon: '☕',
+        title: 'Termos Kopi Jahe Mas Damar',
+        dawnText: 'Masih ada sisa aroma jahe hangat dari termos kecil ini. Kadang keberanian cukup berbentuk pesan singkat: "lorong ini tidak sedingin kemarin."'
+    },
+    sora: {
+        icon: '🎨',
+        title: 'Lukisan Payung Cat Air Sora',
+        dawnText: 'Sora melukis kita berdua di bawah payung kuning—tanpa wajah yang jelas, cukup dua bahu yang tak lagi merasa sendirian di dunia.'
+    }
+};
+
 const HOTSPOTS = {
     room304: [
         { id: 'kitchen', x: 150, shortTitle: 'Kompor Sup', label: 'Masak Sup Hangat (+30 Mental)' },
         { id: 'terrarium', x: 365, shortTitle: 'Terarium Lumut', label: 'Semprot & Rawat Lumut (+20 Mental)' },
-        { id: 'workbench', x: 565, shortTitle: 'Meja Kerja', label: 'Perbaiki Barang di Meja Kerja' },
+        { id: 'workbench', x: 545, shortTitle: 'Meja Kerja', label: 'Perbaiki Barang di Meja Kerja' },
+        { id: 'keepsakes', x: 635, shortTitle: 'Kenangan', label: 'Lihat Bingkisan Kenangan Tetangga' },
         { id: 'vent_window', x: 745, shortTitle: 'Ventilasi', label: 'Dengarkan Kabar dari Ventilasi' },
         { id: 'door_gift', x: 835, shortTitle: 'Bingkisan Pintu', label: 'Ambil Balasan Sunyi di Depan Pintu!' },
         { id: 'door_out', x: 915, shortTitle: 'Pintu Lorong', label: 'Keluar ke Lorong Lantai 3' }
@@ -122,20 +160,20 @@ const ENDINGS_DATA = {
         title: 'Akhir A: Penjaga di Balik Bayangan',
         badge: 'Avoidant Ending',
         summary: 'Kau memberi isyarat cahaya ke lantai bawah agar Mas Damar naik menjemput Sora, lalu mundur sebelum siapa pun melihatmu. Semua tetangga selamat malam ini—namun tirai Kamar 304 kembali tertutup rapat.',
-        epilogueHint: 'Coba lagi di atap dengan Mental ≥ 30 atau beranikan diri melangkah untuk membuka akhir lain.'
+        epilogueHint: 'Jaga kesehatan mental (≥ 30 untuk Akhir B, atau ≥ 50 untuk Akhir Sejati) saat naik ke atap.'
     },
     lanterns: {
         id: 'lanterns',
         title: 'Akhir B: Jembatan Cahaya Lumut',
         badge: 'Silent Empathy Ending',
         summary: 'Kau menyusun barisan toples lentera lumut membentuk jalur hangat di atas beton basah. Karena Sora peka pada cahaya, ia menoleh melihat pendar hijau itu dan perlahan melangkah mundur menuju pintu. Ia tahu ada jiwa baik yang menjaganya dari balik kaca.',
-        epilogueHint: 'Satu langkah keberanian lagi bisa membuka Akhir Sejati.'
+        epilogueHint: 'Pertahankan Ketahanan Mental ≥ 50 agar cukup kuat membuka Akhir Sejati.'
     },
     threshold: {
         id: 'threshold',
         title: 'Akhir Sejati: Kaca yang Sedikit Terbuka',
         badge: 'Bittersweet Dawn • True Ending',
         summary: 'Melawan detak cemas di dadamu, kau membuka payung dan duduk tenang di samping Sora hingga badai reda dan fajar keemasan menyingsing. Tanpa satu kata pun terucap, ia mengerti kau hadir. Sejak pagi itu, tirai Kamar 304 terbuka separuh—dan sebuah sketsa kecil serta teh hangat menunggumu di depan pintu.',
-        epilogueHint: 'Selamat! Kamu menemukan Akhir Sejati. Jelajahi Kamar 304 dalam suasana fajar pagi!'
+        epilogueHint: 'Selamat! Kamu menemukan Akhir Sejati. Jelajahi Kamar 304 & periksa kenangan di pagi fajar!'
     }
 };
