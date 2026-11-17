@@ -1,0 +1,16 @@
+{
+  "name": "terarium-di-ujung-lorong",
+  "version": "2.0.0",
+  "description": "Game drama psikologis indie interaktif tentang empati sunyi di Kamar 304 Rusunawa Asoka.",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}

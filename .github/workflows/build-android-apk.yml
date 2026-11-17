@@ -1,0 +1,78 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Python & Pillow for Android icons
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies & build web bundle
+        run: |
+          npm install
+          node scripts/build.mjs
+          python -m pip install --quiet pillow
+
+      - name: Generate Android project via Capacitor
+        run: |
+          npx cap add android
+          python scripts/prepare-android-icons.py
+          npx cap sync android
+
+      - name: Build Debug APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Stage APK artifact
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk Terarium-di-Ujung-Lorong.apk
+          ls -lh Terarium-di-Ujung-Lorong.apk
+
+      - name: Upload APK Workflow Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Terarium-di-Ujung-Lorong-APK
+          path: Terarium-di-Ujung-Lorong.apk
+          retention-days: 90
+
+      - name: Publish APK to GitHub Release (latest)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="latest"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" Terarium-di-Ujung-Lorong.apk --clobber
+          else
+            gh release create "$TAG" Terarium-di-Ujung-Lorong.apk \
+              --title "Terarium di Ujung Lorong v2.0 (Android APK)" \
+              --notes "Build APK Android otomatis untuk game Terarium di Ujung Lorong (3 Malam, Mini-Game Reparasi, Mode Mengendap, Audio Spasial, Offline Ready)."
+          fi

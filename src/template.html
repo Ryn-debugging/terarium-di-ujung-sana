@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#090b0e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Terarium di Ujung Lorong — Game drama psikologis indie tentang empati sunyi di Kamar 304 Rusunawa Asoka.">
+    <title>Terarium di Ujung Lorong — Indie Psychological Drama</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <style>
+{{STYLES}}
+    .mobile-only { display: none; }
+    @media (max-width: 860px) { .mobile-only { display: inline-flex; } }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Atmospheric Overlays -->
+    <div class="film-grain"></div>
+    <div id="sensory-vignette"></div>
+    <div id="grounding-overlay"></div>
+    <div id="panic-overlay"></div>
+    <div class="letterbox-bar letterbox-top"></div>
+    <div class="letterbox-bar letterbox-bottom"></div>
+
+    <!-- NIGHT TRANSITION OVERLAY -->
+    <div id="night-transition-overlay">
+        <span id="nt-kicker" class="font-mono-tech" style="font-size:12px; color:#34d399; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;"></span>
+        <h2 id="nt-title" style="margin:0 0 8px; font-size:clamp(22px, 4vw, 34px); color:#fff;"></h2>
+        <p id="nt-sub" style="margin:0; font-size:14px; color:#94a3b8; max-width:440px;"></p>
+    </div>
+
+    <!-- FLOATING TOAST -->
+    <div id="toast-container">
+        <div id="toast-box">
+            <span id="toast-icon">✨</span>
+            <span id="toast-text"></span>
+        </div>
+    </div>
+
+    <!-- TITLE SCREEN -->
+    <section id="title-screen">
+        <div class="title-inner">
+            <div class="title-emblem">
+                <svg viewBox="0 0 100 120" width="100%" height="100%">
+                    <rect x="33" y="8" width="34" height="10" rx="3" fill="#b45309" />
+                    <rect x="29" y="18" width="42" height="6" rx="2" fill="none" stroke="#94a3b8" stroke-width="2" />
+                    <path d="M29 24 L18 42 L18 100 Q18 112 30 112 L70 112 Q82 112 82 100 L82 42 L71 24 Z" fill="rgba(16, 185, 129, 0.1)" stroke="#cbd5e1" stroke-width="2" />
+                    <path d="M20 92 Q50 86 80 92 L80 100 Q80 110 70 110 L30 110 Q20 110 20 100 Z" fill="#27272a" />
+                    <path d="M22 92 Q36 78 52 88 Q68 76 78 92 Z" fill="#059669" />
+                    <path d="M50 88 Q50 64 42 54" stroke="#34d399" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    <path d="M42 54 Q32 52 36 44 Q44 44 42 54" fill="#6ee7b7" />
+                    <path d="M48 70 Q58 62 60 54 Q50 56 48 70" fill="#34d399" />
+                    <circle cx="36" cy="68" r="2.2" fill="#fcd34d" />
+                    <circle cx="62" cy="46" r="1.8" fill="#a7f3d0" />
+                </svg>
+            </div>
+
+            <span class="title-kicker">Kamar 304 • Rusunawa Asoka • 3 Malam</span>
+            <h1 class="title-heading">Terarium di Ujung Lorong</h1>
+            <p class="title-sub">
+                Bantu tetanggamu dari balik kamar secara diam-diam tanpa harus bertatap muka.
+            </p>
+
+            <div style="margin-bottom:14px;">
+                <span id="title-endings-pill" class="pill-badge">Koleksi Akhir: 0 / 3</span>
+            </div>
+
+            <div class="title-rules">
+                <div class="rule-row">
+                    <span class="rule-num amber">1</span>
+                    <span><strong style="color:#fcd34d;">Ketahanan Mental:</strong> Masak sup (2x per malam) & rawat lumut di kamar 304.</span>
+                </div>
+                <div class="rule-row">
+                    <span class="rule-num rose">2</span>
+                    <span><strong style="color:#fda4af;">Cemas Sosial & Sembunyi:</strong> Gunakan Spot Sembunyi / <code class="font-mono-tech">[S]</code> di lorong & <code class="font-mono-tech">[SPASI]</code> untuk tarik napas.</span>
+                </div>
+                <div class="rule-row">
+                    <span class="rule-num emerald">3</span>
+                    <span><strong style="color:#6ee7b7;">Empati Sunyi:</strong> Dengar kabar dari ventilasi, perbaiki barang dengan unik tiap malam, & temukan balasan mereka.</span>
+                </div>
+            </div>
+
+            <div class="title-actions">
+                <button id="btn-continue-game" class="m-btn primary hidden">▶ Lanjutkan Malam</button>
+                <button id="btn-start-game" class="m-btn primary">▶ Mulai Bermain</button>
+                <div class="title-secondary-row">
+                    <button id="btn-title-gallery" class="m-btn secondary sm" style="width:100%;">🌅 Galeri Akhir</button>
+                    <button id="btn-install-app" class="m-btn secondary sm" style="width:100%;">📲 Install / APK</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOP HUD -->
+    <header id="game-hud">
+        <!-- Desktop Full HUD -->
+        <div class="hud-grid">
+            <div class="hud-card">
+                <div class="hud-status-head">
+                    <span class="hud-name">
+                        <span class="status-dot"></span>
+                        Status Raka
+                    </span>
+                    <span id="selfcare-badge" class="pill-badge">Fisik Sehat</span>
+                </div>
+
+                <div class="bar-block">
+                    <div class="bar-label-row">
+                        <span style="color:#fcd34d;">Ketahanan Mental</span>
+                        <span id="resilience-text" class="font-mono-tech" style="color:#fde68a;">85 / 100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div id="resilience-cap-lock" class="bar-cap-lock" style="width:0%;"></div>
+                        <div id="resilience-bar" class="bar-fill-mental" style="width:85%;"></div>
+                    </div>
+                </div>
+
+                <div class="bar-block" style="margin-bottom:9px;">
+                    <div class="bar-label-row">
+                        <span style="color:#7dd3fc;">Cemas Sosial</span>
+                        <span id="sensory-text" class="font-mono-tech" style="color:#bae6fd;">10%</span>
+                    </div>
+                    <div class="bar-track">
+                        <div id="sensory-bar" class="bar-fill-sensory" style="width:10%;"></div>
+                    </div>
+                </div>
+
+                <button id="btn-grounding" class="m-btn emerald sm" style="width:100%; padding:7px 8px;" title="Tarik Napas Tenang: -35% Cemas & -20 Mental">
+                    🌬️ [SPASI] Napas Tenang (-35% Cemas)
+                </button>
+            </div>
+
+            <div class="hud-mission-card">
+                <div class="mission-meta">
+                    <span class="mission-tag">🎯 Misi Saat Ini</span>
+                    <span id="quest-step-badge" class="mission-step">Malam 1 • 1/4</span>
+                </div>
+                <p id="quest-banner-text" class="mission-text">
+                    Cek Ventilasi untuk mendengar kabar Bu Ratna (301).
+                </p>
+            </div>
+
+            <div class="hud-right-col">
+                <div class="hud-right-top">
+                    <div class="area-pill">
+                        <span id="area-icon" style="font-size:18px;">🏠</span>
+                        <div style="min-width:0;">
+                            <div id="area-title" style="font-size:13px; font-weight:700; color:#fff; line-height:1.2;">Kamar 304</div>
+                            <div id="area-subtitle" style="font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Zona Aman</div>
+                        </div>
+                    </div>
+
+                    <button id="btn-open-journal" class="icon-btn" title="Tas, Surat & Koleksi Akhir">
+                        <span>📖</span>
+                        <span id="inventory-count-badge" class="font-mono-tech" style="color:#fde68a; font-size:11px;">0/3</span>
+                    </button>
+
+                    <button id="btn-toggle-audio" class="icon-btn" title="Suara Hujan & Audio">
+                        <span id="audio-icon">🔊</span>
+                    </button>
+                </div>
+
+                <div class="tracker-strip">
+                    <span id="tracker-301">301: —</span>
+                    <span>•</span>
+                    <span id="tracker-302">302: —</span>
+                    <span>•</span>
+                    <span id="tracker-305">305: —</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Compact Top Strip -->
+        <div id="mobile-hud-strip">
+            <div class="mobile-top-row">
+                <div class="mobile-bars">
+                    <div>
+                        <div class="mobile-stat-label">
+                            <span style="color:#fcd34d;">Mental</span>
+                            <span id="m-resilience-text" class="font-mono-tech" style="color:#fde68a;">85</span>
+                        </div>
+                        <div class="mobile-stat-track">
+                            <div id="m-resilience-bar" class="bar-fill-mental" style="width:85%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mobile-stat-label">
+                            <span style="color:#7dd3fc;">Cemas</span>
+                            <span id="m-sensory-text" class="font-mono-tech" style="color:#bae6fd;">10%</span>
+                        </div>
+                        <div class="mobile-stat-track">
+                            <div id="m-sensory-bar" class="bar-fill-sensory" style="width:10%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="m-btn-journal" class="icon-btn" style="padding:6px 9px; font-size:12px;">
+                    📖 <span id="m-journal-badge" class="font-mono-tech" style="color:#fde68a;">0/3</span>
+                </button>
+                <button id="m-btn-audio" class="icon-btn" style="padding:6px 9px; font-size:12px;">
+                    <span id="m-audio-icon">🔊</span>
+                </button>
+            </div>
+
+            <div class="mobile-mission-row">
+                <span id="m-mission-step" class="mission-step" style="flex-shrink:0;">M1 • 1/4</span>
+                <span id="mobile-mission-text">Cek Ventilasi kamar 304.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN 2D STAGE -->
+    <main id="stage-wrap">
+        <canvas id="game-canvas"></canvas>
+
+        <div id="hotspot-prompt" class="hidden">
+            <button id="btn-interact-hotspot" class="hotspot-btn">
+                <span class="hotspot-key">[E / Klik]</span>
+                <span id="hotspot-prompt-label">Interaksi</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- CUTSCENE BANNER (DURING ENDING SEQUENCE) -->
+    <div id="cutscene-bar" class="hidden">
+        <div id="cutscene-text" style="font-size:14px; color:#f1f5f9; line-height:1.5; margin-bottom:10px;"></div>
+        <div id="cutscene-actions"></div>
+    </div>
+
+    <!-- BOTTOM DIALOGUE & CONTROLS -->
+    <footer id="game-footer">
+        <div class="footer-inner">
+            <div class="monologue-box">
+                <p id="monologue-text">Kamarku tenang dan aman. Aku bisa mendengar suara tetangga dari celah ventilasi.</p>
+                <p id="monologue-sub">Jalan dengan [A/D], [Panah], atau ketuk langsung objek di layar.</p>
+            </div>
+
+            <div class="controls-cluster">
+                <button id="btn-move-left" class="ctrl-btn" title="Jalan ke Kiri">◀</button>
+                <button id="btn-toggle-hide" class="ctrl-btn" style="display:none;" title="Mode Sembunyi [S]">🙈</button>
+                <button id="m-btn-grounding" class="ctrl-btn breath mobile-only" title="Tarik Napas [SPASI]">🌬️</button>
+                <button id="btn-action-main" class="ctrl-btn primary" title="Interaksi [E]">AKSI</button>
+                <button id="btn-move-right" class="ctrl-btn" title="Jalan ke Kanan">▶</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL SYSTEM -->
+    <div id="modal-backdrop" class="hidden">
+        <div id="modal-card">
+            <button id="btn-close-modal" title="Tutup [ESC]">✕</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+{{SCRIPTS}}
+    </script>
+</body>
+</html>
